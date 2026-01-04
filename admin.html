@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Central Command | Botronics Admin</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Space+Mono&family=Silkscreen&family=Outfit:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        :root {
+            --admin-primary: #000000;
+            --admin-accent: #ff4d00;
+            --admin-bg: #f4f4f4;
+            --admin-surface: #ffffff;
+            --admin-border: #e0e0e0;
+        }
+
+        body.admin-mode {
+            background-color: var(--admin-bg);
+            padding-top: 0;
+            overflow-x: hidden;
+            color: #000;
+        }
+
+        #login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            z-index: 20000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .login-card {
+            width: 400px;
+            padding: 40px;
+            border: 2px solid #000;
+            background: #fff;
+            text-align: center;
+        }
+
+        .login-card h1 {
+            font-family: var(--font-pixel);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .login-card input {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            font-family: var(--font-mono);
+            outline: none;
+        }
+
+        .login-card button {
+            width: 100%;
+            padding: 15px;
+            background: #000;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-family: var(--font-heading);
+            font-weight: 600;
+        }
+
+        #admin-panel {
+            display: none;
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 40px;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 20px;
+        }
+
+        .admin-header h2 {
+            font-family: var(--font-pixel);
+            font-size: 1.8rem;
+        }
+
+        /* Tabs */
+        .admin-tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: #fff;
+            border: 1px solid #ddd;
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Forms */
+        .admin-card {
+            background: #fff;
+            border: 1px solid var(--admin-border);
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .form-section-title {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--admin-accent);
+            margin: 25px 0 15px 0;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .input-group label {
+            font-size: 0.6rem;
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            opacity: 0.6;
+            font-weight: 700;
+        }
+
+        .input-group input,
+        .input-group select,
+        .input-group textarea {
+            padding: 10px;
+            border: 1px solid #ddd;
+            font-family: inherit;
+            font-size: 0.8rem;
+            border-radius: 4px;
+        }
+
+        .input-group input:focus {
+            border-color: #000;
+            outline: none;
+        }
+
+        /* Listing Table */
+        .device-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+        }
+
+        .device-table th {
+            text-align: left;
+            padding: 15px;
+            background: #f8f8f8;
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            border-bottom: 2px solid #000;
+        }
+
+        .device-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            font-size: 0.8rem;
+        }
+
+        .action-del {
+            color: #ff0000;
+            background: none;
+            border: 1px solid #ff0000;
+            padding: 5px 10px;
+            font-size: 0.6rem;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .action-del:hover {
+            background: #ff0000;
+            color: #fff;
+        }
+
+        .btn-primary {
+            background: #000;
+            color: #fff;
+            padding: 15px 30px;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+
+<body class="admin-mode">
+
+    <div id="login-overlay">
+        <div class="login-card">
+            <h1>CENTRAL COMMAND</h1>
+            <p style="font-size: 0.7rem; margin-bottom: 20px; opacity: 0.6;">RESTRICTED ACCESS: ENTER PROTOCOL KEY</p>
+            <input type="password" id="admin-pass" placeholder="ACCESS KEY">
+            <button onclick="checkAuth()">INITIATE SYNC</button>
+            <p id="error-msg" style="color: red; font-size: 0.7rem; margin-top: 10px; display: none;">ACCESS DENIED:
+                INVALID KEY</p>
+        </div>
+    </div>
+
+    <div id="admin-panel">
+        <div class="admin-header">
+            <div>
+                <h2>ADMIN TERMINAL</h2>
+                <p style="font-size: 0.8rem; opacity: 0.6;">Release Cycle: 2026.1 // Status: OPERATIONAL</p>
+            </div>
+            <button class="btn-outline" onclick="location.reload()">TERMINATE SESSION</button>
+        </div>
+
+        <div class="admin-tabs">
+            <button class="tab-btn active" onclick="switchTab('release', event)">Release Control</button>
+            <button class="tab-btn" onclick="switchTab('add', event)">Add New Device</button>
+            <button class="tab-btn" onclick="switchTab('manage', event)">Market Management</button>
+            <button class="tab-btn" onclick="switchTab('comments', event)">Intel Moderation</button>
+            <button class="tab-btn" onclick="switchTab('news', event)">Intelligence Feed</button>
+        </div>
+
+        <!-- RELEASE CONTROL -->
+        <div id="tab-release" class="tab-content active">
+            <div class="admin-card">
+                <h3>RELEASE CONTROL SYSTEM</h3>
+                <p style="font-size: 0.8rem; color: #666; margin-bottom: 20px;">
+                    <strong>Release Control</strong> allows you to manage upcoming launches. Devices marked as "COMING
+                    SOON" remain hidden in general searches or tagged with "COMING SOON". By changing their segment
+                    here, you <strong>Launch</strong> them into the live catalog under their respective categories.
+                </p>
+                <div class="launch-grid" id="launch-grid"
+                    style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
+                </div>
+                <button class="btn-primary" onclick="saveRelChanges()" style="margin-top: 30px;">DEPLOY RELEASE
+                    UPDATES</button>
+            </div>
+        </div>
+
+        <!-- ADD NEW DEVICE -->
+        <div id="tab-add" class="tab-content">
+            <div class="admin-card">
+                <h3 style="margin-bottom: 20px;">INJECT HARDWARE SPECIFICATIONS</h3>
+
+                <div class="form-section-title">Identity & Market</div>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label>Device Name</label>
+                        <input type="text" id="add-name" placeholder="Samsung Galaxy S26 Ultra">
+                    </div>
+                    <div class="input-group">
+                        <label>Category</label>
+                        <select id="add-category">
+                            <option value="Phone">Phone</option>
+                            <option value="Laptop">Laptop</option>
+                            <option value="Tablet">Tablet</option>
+                            <option value="Foldable">Foldable</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label>Price Display (e.g. ₹1,24,999)</label>
+                        <input type="text" id="add-price">
+                    </div>
+                    <div class="input-group">
+                        <label>Price Value (For sorting, e.g. 124999)</label>
+                        <input type="number" id="add-price-val">
+                    </div>
+                    <div class="input-group">
+                        <label>Segment</label>
+                        <select id="add-segment">
+                            <option value="COMING_SOON">COMING SOON</option>
+                            <option value="ALL_ROUNDER">ALL ROUNDER</option>
+                            <option value="PERFORMANCE">PERFORMANCE</option>
+                            <option value="PRO">PRO</option>
+                            <option value="CAMERA">CAMERA</option>
+                            <option value="CREATOR_LAPTOP">CREATOR LAPTOP</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-section-title">Technical Specifications</div>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label>Display (e.g. 6.8" AMOLED 120Hz)</label>
+                        <input type="text" id="add-spec-disp">
+                    </div>
+                    <div class="input-group">
+                        <label>Processor (CPU)</label>
+                        <input type="text" id="add-spec-cpu">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label>RAM (e.g. 12GB)</label>
+                        <input type="text" id="add-spec-ram">
+                    </div>
+                    <div class="input-group">
+                        <label>Storage (e.g. 256GB)</label>
+                        <input type="text" id="add-spec-storage">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label>Antutu Score</label>
+                        <input type="number" id="add-antutu" placeholder="2400000">
+                    </div>
+                    <div class="input-group">
+                        <label>Camera Rating (/10)</label>
+                        <input type="number" step="0.1" id="add-camera-rat">
+                    </div>
+                    <div class="input-group">
+                        <label>GPU/Display Rating (/10)</label>
+                        <input type="number" step="0.1" id="add-gpu-rat">
+                    </div>
+                </div>
+
+                <div class="form-section-title">Visuals & Media</div>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label>Main Image URL</label>
+                        <input type="text" id="add-img-main" value="assets/products/101.jpg">
+                    </div>
+                </div>
+                <div class="input-group" style="margin-bottom: 15px;">
+                    <label>Gallery Images (Comma separated URLs)</label>
+                    <textarea id="add-img-gallery" rows="2" placeholder="url1, url2, url3"></textarea>
+                </div>
+
+                <div class="form-section-title">Content & Strategy</div>
+                <div class="input-group" style="margin-bottom: 15px;">
+                    <label>Product Description</label>
+                    <textarea id="add-desc" rows="3"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label>Pros (Comma separated)</label>
+                        <input type="text" id="add-pros" placeholder="Pro 1, Pro 2, Pro 3">
+                    </div>
+                    <div class="input-group">
+                        <label>Cons (Comma separated)</label>
+                        <input type="text" id="add-cons" placeholder="Con 1, Con 2, Con 3">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label>Release Date (e.g. January 2026)</label>
+                        <input type="text" id="add-release">
+                    </div>
+                    <div class="input-group">
+                        <label>Buy Link (Amazon/Flipkart)</label>
+                        <input type="text" id="add-link">
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="addNewProductDetailed()"
+                    style="width: 100%; margin-top: 20px;">INJECT INTO CENTRAL DATABASE</button>
+            </div>
+        </div>
+
+        <!-- MARKET MANAGEMENT (Remove Devices) -->
+        <div id="tab-manage" class="tab-content">
+            <div class="admin-card">
+                <h3 style="margin-bottom: 20px;">MARKET CATALOG INVENTORY</h3>
+                <div style="max-height: 600px; overflow-y: auto;">
+                    <table class="device-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventory-list"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- COMMENTS MODERATION -->
+        <div id="tab-comments" class="tab-content">
+            <div class="admin-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3>USER REVIEW STREAM</h3>
+                    <div style="display: flex; gap: 5px;">
+                        <button class="tab-btn" onclick="filterComments('all')">ALL</button>
+                        <button class="tab-btn" onclick="filterComments('pos')">POSITIVE</button>
+                        <button class="tab-btn" onclick="filterComments('neg')">NEGATIVE</button>
+                    </div>
+                </div>
+                <div id="admin-comments-list"></div>
+            </div>
+        </div>
+
+        <!-- NEWS MANAGEMENT -->
+        <div id="tab-news" class="tab-content">
+            <div class="admin-card">
+                <h3 style="margin-bottom: 20px;">INJECT NEWS INTELLIGENCE</h3>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label>News Title</label>
+                        <input type="text" id="news-title" placeholder="The Future of Quantum Computing">
+                    </div>
+                    <div class="input-group">
+                        <label>Category</label>
+                        <select id="news-category">
+                            <option value="HARDWARE">HARDWARE</option>
+                            <option value="MOBILE">MOBILE</option>
+                            <option value="AI">AI</option>
+                            <option value="RETAIL">RETAIL</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label>Date (e.g. JAN 03, 2026)</label>
+                        <input type="text" id="news-date">
+                    </div>
+                    <div class="input-group">
+                        <label>Image URL</label>
+                        <input type="text" id="news-image" value="assets/products/501.jpg">
+                    </div>
+                </div>
+                <div class="input-group" style="margin-bottom: 15px;">
+                    <label>Excerpt (Short Summary)</label>
+                    <textarea id="news-excerpt" rows="2"></textarea>
+                </div>
+                <button class="btn-primary" onclick="addNewsItem()" style="width: 100%; margin-bottom: 30px;">INJECT
+                    INTO FEED</button>
+
+                <h3 style="margin-bottom: 20px;">ACTIVE INTELLIGENCE FEED</h3>
+                <div style="max-height: 400px; overflow-y: auto;">
+                    <table class="device-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="news-list"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script type="module">
+        import { db, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, where } from './firebase-config.js';
+
+        const AUTH_KEY = "N.oppo@742800";
+
+        // Local state copies for UI
+        let cloudOverrides = {};
+        let cloudProducts = [];
+        let deletedIds = []; // Still used for core product blacklisting
+        let cloudNews = [];
+        let deletedNewsIds = [];
+        let cloudReviews = {};
+
+        // Expose to window for inline onclicks
+        window.checkAuth = checkAuth;
+        window.switchTab = switchTab;
+        window.saveRelChanges = saveRelChanges;
+        window.addNewProductDetailed = addNewProductDetailed;
+        window.removeDevice = removeDevice;
+        window.deleteComment = deleteComment;
+        window.filterComments = loadComments;
+        window.addNewsItem = addNewsItem;
+        window.removeNews = removeNews;
+
+        async function initPanel() {
+            console.log("Syncing with Cloud Database...");
+            await syncFromCloud();
+            loadLaunchPanel();
+        }
+
+        async function syncFromCloud() {
+            try {
+                // Fetch overrides (launches)
+                const overSnap = await getDocs(collection(db, "overrides"));
+                cloudOverrides = {};
+                overSnap.forEach(doc => cloudOverrides[doc.id] = doc.data());
+
+                // Fetch extra products
+                const prodSnap = await getDocs(collection(db, "products"));
+                cloudProducts = [];
+                prodSnap.forEach(doc => cloudProducts.push({ ...doc.data(), cloudId: doc.id }));
+
+                // Fetch news
+                const newsSnap = await getDocs(collection(db, "news"));
+                cloudNews = [];
+                newsSnap.forEach(doc => cloudNews.push({ ...doc.data(), cloudId: doc.id }));
+
+                // Fetch reviews
+                const revSnap = await getDocs(collection(db, "reviews"));
+                cloudReviews = {};
+                revSnap.forEach(docSnap => {
+                    const data = docSnap.data();
+                    if (!cloudReviews[data.prodId]) cloudReviews[data.prodId] = [];
+                    cloudReviews[data.prodId].push({ ...data, cloudId: docSnap.id });
+                });
+
+                // Keep local storage for deleted core IDs (simplest for now)
+                deletedIds = JSON.parse(localStorage.getItem('deleted_tech_ids') || '[]');
+                deletedNewsIds = JSON.parse(localStorage.getItem('deleted_tech_news_ids') || '[]');
+            } catch (e) {
+                console.error("Firebase Sync Failed: Check your config.", e);
+            }
+        }
+
+        function checkAuth() {
+            if (document.getElementById('admin-pass').value === AUTH_KEY) {
+                document.getElementById('login-overlay').style.display = 'none';
+                document.getElementById('admin-panel').style.display = 'block';
+                initPanel();
+            } else {
+                document.getElementById('error-msg').style.display = 'block';
+            }
+        }
+
+        function switchTab(tab, e) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            if (e) e.target.classList.add('active');
+            document.getElementById('tab-' + tab).classList.add('active');
+            if (tab === 'manage') loadInventory();
+            if (tab === 'release') loadLaunchPanel();
+            if (tab === 'comments') loadComments();
+            if (tab === 'news') loadNewsFeed();
+        }
+
+        // Release Control
+        function loadLaunchPanel() {
+            const grid = document.getElementById('launch-grid');
+            grid.innerHTML = '';
+            window.techData.products.filter(p => p.segment === 'COMING_SOON' && !deletedIds.includes(p.id)).forEach(p => {
+                const card = document.createElement('div');
+                card.style.border = "1px solid #eee";
+                card.style.padding = "15px";
+                card.innerHTML = `
+                    <div style="height: 100px; display: flex; align-items: center; justify-content: center; background: #f9f9f9; margin-bottom: 10px;">
+                        <img src="${p.image}" style="max-height: 80px; width: auto;">
+                    </div>
+                    <div style="font-size: 0.6rem; color: var(--admin-accent); font-family: var(--font-mono);">${p.releaseDate}</div>
+                    <h4 style="font-size: 0.9rem; margin: 5px 0;">${p.name}</h4>
+                    <select id="seg-${p.id}" style="width: 100%; padding: 8px; font-size: 0.7rem;">
+                        <option value="COMING_SOON">REMAIN COMING SOON</option>
+                        <option value="ALL_ROUNDER" ${cloudOverrides[p.id]?.segment === 'ALL_ROUNDER' ? 'selected' : ''}>LAUNCH: ALL ROUNDER</option>
+                        <option value="PERFORMANCE" ${cloudOverrides[p.id]?.segment === 'PERFORMANCE' ? 'selected' : ''}>LAUNCH: PERFORMANCE</option>
+                        <option value="PRO" ${cloudOverrides[p.id]?.segment === 'PRO' ? 'selected' : ''}>LAUNCH: PRO</option>
+                        <option value="CAMERA" ${cloudOverrides[p.id]?.segment === 'CAMERA' ? 'selected' : ''}>LAUNCH: CAMERA</option>
+                    </select>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        async function saveRelChanges() {
+            const btn = document.querySelector('[onclick="saveRelChanges()"]');
+            btn.innerText = "DEPLOYING...";
+
+            for (const p of window.techData.products) {
+                const select = document.getElementById(`seg-${p.id}`);
+                if (select) {
+                    const val = select.value;
+                    if (val !== 'COMING_SOON') {
+                        await updateDoc(doc(db, "overrides", String(p.id)), { segment: val });
+                    } else {
+                        try { await deleteDoc(doc(db, "overrides", String(p.id))); } catch (e) { }
+                    }
+                }
+            }
+            alert("CLOUD UPDATED: Changes are now global.");
+            btn.innerText = "DEPLOY RELEASE UPDATES";
+            syncFromCloud();
+        }
+
+        // Add Detailed Product
+        async function addNewProductDetailed() {
+            const name = document.getElementById('add-name').value;
+            const priceVal = parseInt(document.getElementById('add-price-val').value);
+            if (!name || !priceVal) return alert("NAME AND PRICE_VALUE ARE MANDATORY");
+
+            const galleryStr = document.getElementById('add-img-gallery').value;
+            const prosStr = document.getElementById('add-pros').value;
+            const consStr = document.getElementById('add-cons').value;
+
+            const newProd = {
+                id: Date.now(),
+                name: name,
+                category: document.getElementById('add-category').value,
+                price: document.getElementById('add-price').value || ("₹" + priceVal.toLocaleString()),
+                priceValue: priceVal,
+                specs: {
+                    display: document.getElementById('add-spec-disp').value,
+                    cpu: document.getElementById('add-spec-cpu').value,
+                    ram: document.getElementById('add-spec-ram').value,
+                    storage: document.getElementById('add-spec-storage').value
+                },
+                image: document.getElementById('add-img-main').value,
+                images: galleryStr ? galleryStr.split(',').map(s => s.trim()) : [document.getElementById('add-img-main').value],
+                pros: prosStr ? prosStr.split(',').map(s => s.trim()) : [],
+                cons: consStr ? consStr.split(',').map(s => s.trim()) : [],
+                description: document.getElementById('add-desc').value,
+                antutu: parseInt(document.getElementById('add-antutu').value) || 0,
+                cameraRating: parseFloat(document.getElementById('add-camera-rat').value) || 0,
+                gpuRating: parseFloat(document.getElementById('add-gpu-rat').value) || 0,
+                segment: document.getElementById('add-segment').value,
+                releaseDate: document.getElementById('add-release').value || "January 2026",
+                link: document.getElementById('add-link').value || "#"
+            };
+
+            try {
+                await addDoc(collection(db, "products"), newProd);
+                alert("CLOUD INJECTION SUCCESSFUL: " + name);
+                location.reload();
+            } catch (e) { alert("Error: " + e.message); }
+        }
+
+        // Inventory Management
+        function loadInventory() {
+            const list = document.getElementById('inventory-list');
+            list.innerHTML = '';
+            const allProducts = [...window.techData.products, ...cloudProducts].filter(p => !deletedIds.includes(p.id));
+
+            allProducts.forEach(p => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="font-family: var(--font-mono); font-size: 0.6rem;">#${p.id}</td>
+                    <td><strong>${p.name}</strong></td>
+                    <td><span style="font-size: 0.6rem; background: #eee; padding: 2px 6px;">${p.category}</span></td>
+                    <td>${p.price}</td>
+                    <td><button class="action-del" onclick="removeDevice(${p.id}, '${p.cloudId || ''}')">REMOVE</button></td>
+                `;
+                list.appendChild(tr);
+            });
+        }
+
+        async function removeDevice(id, cloudId) {
+            if (!confirm("ARE YOU SURE YOU WANT TO REMOVE THIS DEVICE FROM THE LIVE CATALOG?")) return;
+
+            if (cloudId) {
+                await deleteDoc(doc(db, "products", cloudId));
+            } else {
+                deletedIds.push(id);
+                localStorage.setItem('deleted_tech_ids', JSON.stringify(deletedIds));
+            }
+
+            alert("DEVICE DECOMMISSIONED GLOBALLY");
+            await syncFromCloud();
+            loadInventory();
+        }
+
+        // Comments
+        function loadComments(filter = 'all') {
+            const list = document.getElementById('admin-comments-list');
+            list.innerHTML = '';
+            let hasComments = false;
+
+            Object.keys(cloudReviews).forEach(prodId => {
+                cloudReviews[prodId].forEach((rev) => {
+                    const isPos = rev.rating >= 4;
+                    const isNeg = rev.rating <= 2;
+                    if (filter === 'pos' && !isPos) return;
+                    if (filter === 'neg' && !isNeg) return;
+
+                    hasComments = true;
+                    const div = document.createElement('div');
+                    div.style.padding = "15px";
+                    div.style.borderBottom = "1px solid #eee";
+                    div.style.display = "flex";
+                    div.style.justifyContent = "space-between";
+                    div.innerHTML = `
+                        <div>
+                            <div style="font-size: 0.7rem; color: ${isPos ? 'green' : (isNeg ? 'red' : '#666')}; font-weight: 700; margin-bottom: 5px;">
+                                ${rev.rating} STARS // ${rev.name}
+                            </div>
+                            <p style="font-size: 0.8rem; margin: 0;">${rev.text}</p>
+                            <div style="font-size: 0.6rem; opacity: 0.5; margin-top: 5px;">Product ID: #${prodId}</div>
+                        </div>
+                        <button class="action-del" onclick="deleteComment('${rev.cloudId}')">DELETE</button>
+                    `;
+                    list.appendChild(div);
+                });
+            });
+
+            if (!hasComments) list.innerHTML = '<div style="padding: 40px; text-align: center; color: #999;">NO REVIEWS FOUND ON CLOUD.</div>';
+        }
+
+        async function deleteComment(cloudId) {
+            if (!confirm("Delete this review from global feed?")) return;
+            await deleteDoc(doc(db, "reviews", cloudId));
+            alert("REVIEW REMOVED");
+            await syncFromCloud();
+            loadComments();
+        }
+
+        // News Management
+        function loadNewsFeed() {
+            const list = document.getElementById('news-list');
+            list.innerHTML = '';
+
+            // Set default date to today
+            const today = new Date();
+            const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+            const formattedDate = `${months[today.getMonth()]} ${String(today.getDate()).padStart(2, '0')}, ${today.getFullYear()}`;
+            if (!document.getElementById('news-date').value) {
+                document.getElementById('news-date').value = formattedDate;
+            }
+
+            const allNews = [...window.techData.news, ...cloudNews].filter(n => !deletedNewsIds.includes(n.id));
+
+            allNews.forEach(n => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="font-family: var(--font-mono); font-size: 0.6rem;">${n.date}</td>
+                    <td><strong>${n.title}</strong></td>
+                    <td><span style="font-size: 0.6rem; background: #eee; padding: 2px 6px;">${n.category}</span></td>
+                    <td><button class="action-del" onclick="removeNews(${n.id}, '${n.cloudId || ''}')">REMOVE</button></td>
+                `;
+                list.appendChild(tr);
+            });
+        }
+
+        async function addNewsItem() {
+            const title = document.getElementById('news-title').value;
+            const excerpt = document.getElementById('news-excerpt').value;
+            if (!title || !excerpt) return alert("TITLE AND EXCERPT ARE MANDATORY");
+
+            const newItem = {
+                id: Date.now(),
+                title: title,
+                category: document.getElementById('news-category').value,
+                date: document.getElementById('news-date').value,
+                excerpt: excerpt,
+                image: document.getElementById('news-image').value,
+                url: "#"
+            };
+
+            await addDoc(collection(db, "news"), newItem);
+            alert("CLOUD NEWS INJECTED: " + title);
+            document.getElementById('news-title').value = '';
+            document.getElementById('news-excerpt').value = '';
+            await syncFromCloud();
+            loadNewsFeed();
+        }
+
+        async function removeNews(id, cloudId) {
+            if (!confirm("ARE YOU SURE YOU WANT TO REMOVE THIS NEWS ITEM GLOBALLY?")) return;
+
+            if (cloudId) {
+                await deleteDoc(doc(db, "news", cloudId));
+            } else {
+                deletedNewsIds.push(id);
+                localStorage.setItem('deleted_tech_news_ids', JSON.stringify(deletedNewsIds));
+            }
+
+            alert("NEWS ITEM REMOVED");
+            await syncFromCloud();
+            loadNewsFeed();
+        }
+    </script>
+</body>
+
+</html>

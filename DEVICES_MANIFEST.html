@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Device Manifest | Studio Blitz</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Silkscreen&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Manifest-specific overrides */
+        #featured {
+            padding: 40px 0 80px;
+        }
+
+        .manifest-header {
+            text-align: center;
+            padding: 60px 0 40px;
+            border-bottom: 2px solid var(--text-color);
+            margin-bottom: 40px;
+        }
+
+        .manifest-header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .manifest-header p {
+            font-family: var(--font-mono);
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        /* Search Bar Styles */
+        .search-container {
+            margin: 30px 0;
+            background: white;
+            padding: 25px;
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .search-container::before,
+        .search-container::after {
+            content: "";
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border: 2px solid var(--text-color);
+        }
+
+        .search-container::before {
+            top: 0;
+            left: 0;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .search-container::after {
+            bottom: 0;
+            right: 0;
+            border-left: none;
+            border-top: none;
+        }
+
+        .search-wrapper {
+            position: relative;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        #searchInput {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            font-size: 16px;
+            border: 2px solid var(--border-color);
+            outline: none;
+            transition: all 0.3s ease;
+            font-family: var(--font-mono);
+            background: var(--bg-color);
+        }
+
+        #searchInput:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-dim);
+            font-size: 20px;
+            pointer-events: none;
+        }
+
+        .search-stats {
+            margin-top: 15px;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            font-family: var(--font-mono);
+            text-align: center;
+        }
+
+        /* Table Styles */
+        .table-section {
+            margin-bottom: 60px;
+        }
+
+        .table-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            padding: 15px 20px;
+            background: #f5f5f5;
+            border-left: 4px solid var(--accent-color);
+            font-family: var(--font-heading);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+            background: white;
+            border: 1px solid var(--border-color);
+        }
+
+        th,
+        td {
+            border: 1px solid var(--border-color);
+            padding: 14px 16px;
+            text-align: left;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+        }
+
+        th {
+            background-color: var(--text-color);
+            color: white;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+        }
+
+        tbody tr {
+            transition: all 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background: #f9f9f9;
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .price {
+            font-weight: 700;
+            color: var(--accent-color);
+            font-size: 1rem;
+        }
+
+        /* Hidden rows */
+        tr.hidden {
+            display: none;
+        }
+
+        /* No results message */
+        .no-results {
+            text-align: center;
+            padding: 60px 40px;
+            color: var(--text-dim);
+            font-size: 1.1rem;
+            font-family: var(--font-mono);
+            display: none;
+            border: 2px dashed var(--border-color);
+            background: #fafafa;
+        }
+
+        .no-results.show {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="index.html" class="logo">STUDIO BLITZ</a>
+                <ul class="nav-links">
+                    <li><a href="index.html">Discover</a></li>
+                    <li><a href="updates.html">Updates</a></li>
+                    <li><a href="compare.html">Compare</a></li>
+                    <li><a href="DEVICES_MANIFEST.html" class="active">Manifest</a></li>
+                </ul>
+                <a href="index.html" class="btn-primary">BACK TO CATALOG</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="featured">
+            <div class="container">
+                <div class="manifest-header">
+                    <h1>HARDWARE <span class="pixel-text">INVENTORY</span> MANIFEST</h1>
+                    <p class="mono-text">COMPLETE DEVICE DATABASE // EXPORT DATE: JANUARY 1, 2026</p>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="search-container">
+                    <div class="search-wrapper">
+                        <input type="text" id="searchInput" placeholder="SEARCH DEVICES BY NAME, BRAND, CPU, SPECS..."
+                            autocomplete="off">
+                        <span class="search-icon">🔍</span>
+                    </div>
+                    <div class="search-stats" id="searchStats">
+                        Showing all devices
+                    </div>
+                </div>
+
+                <div class="no-results" id="noResults">
+                    ⚠ NO DEVICES FOUND MATCHING YOUR SEARCH. TRY DIFFERENT KEYWORDS.
+                </div>
+
+                <div class="table-section">
+                    <h2><i class="fa-solid fa-mobile-screen"></i> NEURAL TERMINALS (PHONES)</h2>
+                    <table>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Specifications</th>
+                        </tr>
+                        <tr>
+                            <td>91</td>
+                            <td>Redmi 13C</td>
+                            <td class="price">₹7,699</td>
+                            <td>CPU: Helio G85, RAM: 4GB, ROM: 128GB, Cell: 5000mAh</td>
+                        </tr>
+                        <tr>
+                            <td>92</td>
+                            <td>POCO C65</td>
+                            <td class="price">₹6,799</td>
+                            <td>CPU: Helio G85, RAM: 4GB, ROM: 128GB, Panel: 90Hz</td>
+                        </tr>
+                        <tr>
+                            <td>93</td>
+                            <td>moto g04</td>
+                            <td class="price">₹6,999</td>
+                            <td>CPU: Unisoc T606, RAM: 4GB, ROM: 64GB, OS: Android 14</td>
+                        </tr>
+                        <tr>
+                            <td>101</td>
+                            <td>Vivo T3 5G</td>
+                            <td class="price">₹19,999</td>
+                            <td>CPU: Dimensity 7200, RAM: 8GB, ROM: 128GB, Panel: 120Hz sAMOLED</td>
+                        </tr>
+                        <tr>
+                            <td>103</td>
+                            <td>iQOO Z9 5G</td>
+                            <td class="price">₹17,499</td>
+                            <td>CPU: Dimensity 7200, RAM: 8GB, ROM: 128GB, Panel: 6.67" AMOLED</td>
+                        </tr>
+                        <tr>
+                            <td>120</td>
+                            <td>Samsung Galaxy F15</td>
+                            <td class="price">₹12,499</td>
+                            <td>CPU: Dimensity 6100+, RAM: 4GB, ROM: 128GB, Cell: 6000mAh</td>
+                        </tr>
+                        <tr>
+                            <td>110</td>
+                            <td>Nothing Phone (2a)</td>
+                            <td class="price">₹23,999</td>
+                            <td>CPU: Dimensity 7200 Pro, RAM: 8GB, ROM: 128GB, Glyph: V2.0</td>
+                        </tr>
+                        <tr>
+                            <td>115</td>
+                            <td>Poco X6 5G</td>
+                            <td class="price">₹21,999</td>
+                            <td>CPU: SD 7s Gen 2, RAM: 8GB, ROM: 256GB, Panel: 1.5K AMOLED</td>
+                        </tr>
+                        <tr>
+                            <td>116</td>
+                            <td>RealMe 12 Pro+</td>
+                            <td class="price">₹29,999</td>
+                            <td>CPU: SD 7s Gen 2, RAM: 8GB, ROM: 128GB, Cam: Periscope Tele</td>
+                        </tr>
+                        <tr>
+                            <td>206</td>
+                            <td>iQOO Neo 9 Pro</td>
+                            <td class="price">₹34,999</td>
+                            <td>CPU: SD 8 Gen 2, RAM: 8GB, ROM: 128GB, Charge: 120W</td>
+                        </tr>
+                        <tr>
+                            <td>203</td>
+                            <td>OnePlus 12R</td>
+                            <td class="price">₹37,999</td>
+                            <td>CPU: SD 8 Gen 2, RAM: 8GB, ROM: 128GB, Display: ProXDR</td>
+                        </tr>
+                        <tr>
+                            <td>153</td>
+                            <td>OPPO Reno12 Pro</td>
+                            <td class="price">₹36,999</td>
+                            <td>CPU: Dimensity 7300-Energy, RAM: 12GB, ROM: 512GB, AI: AI LinkBoost</td>
+                        </tr>
+                        <tr>
+                            <td>202</td>
+                            <td>Vivo V30 Pro</td>
+                            <td class="price">₹41,999</td>
+                            <td>CPU: Dimensity 8200, RAM: 8GB, ROM: 256GB, Cam: Zeiss</td>
+                        </tr>
+                        <tr>
+                            <td>210</td>
+                            <td>Samsung Galaxy S23</td>
+                            <td class="price">₹44,999</td>
+                            <td>CPU: SD 8 Gen 2, RAM: 8GB, ROM: 128GB, Size: Compact</td>
+                        </tr>
+                        <tr>
+                            <td>152</td>
+                            <td>Xiaomi 14 Civi</td>
+                            <td class="price">₹47,999</td>
+                            <td>CPU: SD 8s Gen 3, RAM: 12GB, ROM: 256GB, Display: Cinematic</td>
+                        </tr>
+                        <tr>
+                            <td>117</td>
+                            <td>Google Pixel 8a</td>
+                            <td class="price">₹52,999</td>
+                            <td>CPU: Tensor G3, RAM: 8GB, ROM: 128GB, AI: AI Features</td>
+                        </tr>
+                        <tr>
+                            <td>151</td>
+                            <td>Vivo V40 Pro</td>
+                            <td class="price">₹54,999</td>
+                            <td>CPU: Dimensity 9200+, RAM: 12GB, ROM: 512GB, Cam: Zeiss Optics</td>
+                        </tr>
+                        <tr>
+                            <td>154</td>
+                            <td>Samsung S23 FE</td>
+                            <td class="price">₹54,499</td>
+                            <td>CPU: Exynos 2200, RAM: 8GB, ROM: 256GB, Build: Aluminum/Glass</td>
+                        </tr>
+                        <tr>
+                            <td>155</td>
+                            <td>Realme GT 6</td>
+                            <td class="price">₹51,999</td>
+                            <td>CPU: SD 8s Gen 3, RAM: 16GB, Charge: 120W, Display: 6000nits</td>
+                        </tr>
+                        <tr>
+                            <td>111</td>
+                            <td>Galaxy S24 Ultra</td>
+                            <td class="price">₹1,29,999</td>
+                            <td>CPU: SD 8 Gen 3, RAM: 12GB, ROM: 256GB, Cam: 200MP</td>
+                        </tr>
+                        <tr>
+                            <td>112</td>
+                            <td>Pixel 9 Pro</td>
+                            <td class="price">₹1,09,999</td>
+                            <td>CPU: Tensor G4, RAM: 16GB, ROM: 256GB, AI: Gemini Nano</td>
+                        </tr>
+                        <tr>
+                            <td>118</td>
+                            <td>OnePlus 12</td>
+                            <td class="price">₹64,999</td>
+                            <td>CPU: SD 8 Gen 3, RAM: 12GB, ROM: 256GB, Display: 2K 120Hz</td>
+                        </tr>
+                        <tr>
+                            <td>401</td>
+                            <td>iPhone 16</td>
+                            <td class="price">₹79,900</td>
+                            <td>CPU: A18 Bionic, RAM: 8GB, ROM: 128GB, Cam: Fusion</td>
+                        </tr>
+                        <tr>
+                            <td>402</td>
+                            <td>iPhone 16 Pro Max</td>
+                            <td class="price">₹1,44,900</td>
+                            <td>CPU: A18 Pro, RAM: 8GB, ROM: 256GB, Build: Titanium</td>
+                        </tr>
+                        <tr>
+                            <td>94</td>
+                            <td>Realme Narzo 60</td>
+                            <td class="price">₹14,999</td>
+                            <td>CPU: Dimensity 6020, RAM: 6GB, ROM: 128GB, Panel: 90Hz AMOLED</td>
+                        </tr>
+                        <tr>
+                            <td>95</td>
+                            <td>Samsung Galaxy M34</td>
+                            <td class="price">₹16,499</td>
+                            <td>CPU: Exynos 1280, RAM: 6GB, ROM: 128GB, Cell: 6000mAh</td>
+                        </tr>
+                        <tr>
+                            <td>96</td>
+                            <td>Xiaomi Redmi Note 13</td>
+                            <td class="price">₹15,999</td>
+                            <td>CPU: Dimensity 6080, RAM: 6GB, ROM: 128GB, Panel: 120Hz AMOLED</td>
+                        </tr>
+                        <tr>
+                            <td>97</td>
+                            <td>POCO X5 Pro</td>
+                            <td class="price">₹18,999</td>
+                            <td>CPU: SD 778G, RAM: 8GB, ROM: 256GB, Charge: 67W</td>
+                        </tr>
+                        <tr>
+                            <td>98</td>
+                            <td>Vivo Y100</td>
+                            <td class="price">₹22,999</td>
+                            <td>CPU: Dimensity 900, RAM: 8GB, ROM: 128GB, Panel: 6.67" AMOLED</td>
+                        </tr>
+                        <tr>
+                            <td>99</td>
+                            <td>OnePlus Nord CE 3</td>
+                            <td class="price">₹24,999</td>
+                            <td>CPU: SD 782G, RAM: 8GB, ROM: 128GB, Charge: 80W SUPERVOOC</td>
+                        </tr>
+                        <tr>
+                            <td>102</td>
+                            <td>Motorola Edge 40</td>
+                            <td class="price">₹26,999</td>
+                            <td>CPU: Dimensity 8020, RAM: 8GB, ROM: 256GB, Display: pOLED 144Hz</td>
+                        </tr>
+                        <tr>
+                            <td>104</td>
+                            <td>Realme 11 Pro</td>
+                            <td class="price">₹23,999</td>
+                            <td>CPU: Dimensity 7050, RAM: 8GB, ROM: 256GB, Cam: 100MP OIS</td>
+                        </tr>
+                        <tr>
+                            <td>105</td>
+                            <td>Samsung Galaxy A54</td>
+                            <td class="price">₹33,999</td>
+                            <td>CPU: Exynos 1380, RAM: 8GB, ROM: 128GB, Build: IP67</td>
+                        </tr>
+                        <tr>
+                            <td>106</td>
+                            <td>Xiaomi 13T</td>
+                            <td class="price">₹39,999</td>
+                            <td>CPU: Dimensity 8200-Ultra, RAM: 8GB, ROM: 256GB, Charge: 67W</td>
+                        </tr>
+                        <tr>
+                            <td>107</td>
+                            <td>OPPO F25 Pro</td>
+                            <td class="price">₹25,999</td>
+                            <td>CPU: Dimensity 7050, RAM: 8GB, ROM: 128GB, Panel: 120Hz AMOLED</td>
+                        </tr>
+                        <tr>
+                            <td>108</td>
+                            <td>Vivo T2 Pro</td>
+                            <td class="price">₹21,999</td>
+                            <td>CPU: Dimensity 7200, RAM: 8GB, ROM: 128GB, Display: Curved AMOLED</td>
+                        </tr>
+                        <tr>
+                            <td>109</td>
+                            <td>Nothing Phone (2)</td>
+                            <td class="price">₹44,999</td>
+                            <td>CPU: SD 8+ Gen 1, RAM: 12GB, ROM: 256GB, Glyph: Interface 2.0</td>
+                        </tr>
+                        <tr>
+                            <td>113</td>
+                            <td>iQOO Z7 Pro</td>
+                            <td class="price">₹22,999</td>
+                            <td>CPU: Dimensity 7200, RAM: 8GB, ROM: 128GB, Panel: 3D Curved AMOLED</td>
+                        </tr>
+                        <tr>
+                            <td>114</td>
+                            <td>Realme GT Neo 5</td>
+                            <td class="price">₹31,999</td>
+                            <td>CPU: SD 8+ Gen 1, RAM: 12GB, ROM: 256GB, Charge: 150W</td>
+                        </tr>
+                        <tr>
+                            <td>119</td>
+                            <td>Google Pixel 7a</td>
+                            <td class="price">₹43,999</td>
+                            <td>CPU: Tensor G2, RAM: 8GB, ROM: 128GB, Cam: Computational Photography</td>
+                        </tr>
+                        <tr>
+                            <td>121</td>
+                            <td>Samsung Galaxy S22</td>
+                            <td class="price">₹48,999</td>
+                            <td>CPU: SD 8 Gen 1, RAM: 8GB, ROM: 128GB, Display: Dynamic AMOLED 2X</td>
+                        </tr>
+                        <tr>
+                            <td>122</td>
+                            <td>Xiaomi 12 Pro</td>
+                            <td class="price">₹46,999</td>
+                            <td>CPU: SD 8 Gen 1, RAM: 12GB, ROM: 256GB, Charge: 120W HyperCharge</td>
+                        </tr>
+                        <tr>
+                            <td>123</td>
+                            <td>OnePlus 11R</td>
+                            <td class="price">₹39,999</td>
+                            <td>CPU: SD 8+ Gen 1, RAM: 16GB, ROM: 256GB, Display: 1.5K Fluid AMOLED</td>
+                        </tr>
+                        <tr>
+                            <td>124</td>
+                            <td>Motorola Edge 50 Pro</td>
+                            <td class="price">₹35,999</td>
+                            <td>CPU: SD 7 Gen 3, RAM: 12GB, ROM: 256GB, Panel: 144Hz pOLED</td>
+                        </tr>
+                        <tr>
+                            <td>125</td>
+                            <td>OPPO Reno11 Pro</td>
+                            <td class="price">₹39,999</td>
+                            <td>CPU: Dimensity 8200, RAM: 12GB, ROM: 256GB, Cam: Portrait Expert</td>
+                        </tr>
+                        <tr>
+                            <td>126</td>
+                            <td>Vivo X90</td>
+                            <td class="price">₹59,999</td>
+                            <td>CPU: Dimensity 9200, RAM: 12GB, ROM: 256GB, Cam: Zeiss T* Coating</td>
+                        </tr>
+                        <tr>
+                            <td>127</td>
+                            <td>Realme GT 5 Pro</td>
+                            <td class="price">₹49,999</td>
+                            <td>CPU: SD 8 Gen 3, RAM: 12GB, ROM: 256GB, Display: 6.78" 144Hz</td>
+                        </tr>
+                        <tr>
+                            <td>128</td>
+                            <td>POCO F5 Pro</td>
+                            <td class="price">₹29,999</td>
+                            <td>CPU: SD 8+ Gen 1, RAM: 12GB, ROM: 256GB, Charge: 67W Turbo</td>
+                        </tr>
+                        <tr>
+                            <td>129</td>
+                            <td>Samsung Galaxy Z Flip 5</td>
+                            <td class="price">₹99,999</td>
+                            <td>CPU: SD 8 Gen 2, RAM: 8GB, ROM: 256GB, Cover: 3.4" Super AMOLED</td>
+                        </tr>
+                        <tr>
+                            <td>130</td>
+                            <td>Xiaomi 14</td>
+                            <td class="price">₹69,999</td>
+                            <td>CPU: SD 8 Gen 3, RAM: 12GB, ROM: 256GB, Cam: Leica Optics</td>
+                        </tr>
+                        <tr>
+                            <td>131</td>
+                            <td>OnePlus 11</td>
+                            <td class="price">₹56,999</td>
+                            <td>CPU: SD 8 Gen 2, RAM: 16GB, ROM: 256GB, Cam: Hasselblad</td>
+                        </tr>
+                        <tr>
+                            <td>132</td>
+                            <td>Google Pixel 8</td>
+                            <td class="price">₹75,999</td>
+                            <td>CPU: Tensor G3, RAM: 8GB, ROM: 128GB, AI: Magic Eraser</td>
+                        </tr>
+                        <tr>
+                            <td>133</td>
+                            <td>Samsung Galaxy S24</td>
+                            <td class="price">₹79,999</td>
+                            <td>CPU: Exynos 2400, RAM: 8GB, ROM: 256GB, AI: Galaxy AI</td>
+                        </tr>
+                        <tr>
+                            <td>134</td>
+                            <td>Vivo X100</td>
+                            <td class="price">₹63,999</td>
+                            <td>CPU: Dimensity 9300, RAM: 12GB, ROM: 256GB, Cam: Zeiss APO</td>
+                        </tr>
+                        <tr>
+                            <td>135</td>
+                            <td>OPPO Find X7</td>
+                            <td class="price">₹69,999</td>
+                            <td>CPU: Dimensity 9300, RAM: 16GB, ROM: 512GB, Cam: Hasselblad</td>
+                        </tr>
+                        <tr>
+                            <td>136</td>
+                            <td>Realme GT 6T</td>
+                            <td class="price">₹32,999</td>
+                            <td>CPU: SD 7+ Gen 3, RAM: 8GB, ROM: 256GB, Display: 120Hz LTPO</td>
+                        </tr>
+                        <tr>
+                            <td>137</td>
+                            <td>Motorola Razr 50 Ultra</td>
+                            <td class="price">₹89,999</td>
+                            <td>CPU: SD 8s Gen 3, RAM: 12GB, ROM: 512GB, Cover: 4" pOLED</td>
+                        </tr>
+                        <tr>
+                            <td>138</td>
+                            <td>Xiaomi Redmi K70</td>
+                            <td class="price">₹29,999</td>
+                            <td>CPU: SD 8 Gen 2, RAM: 12GB, ROM: 256GB, Display: 2K 120Hz</td>
+                        </tr>
+                        <tr>
+                            <td>139</td>
+                            <td>POCO X6 Pro</td>
+                            <td class="price">₹26,999</td>
+                            <td>CPU: Dimensity 8300-Ultra, RAM: 12GB, ROM: 512GB, Charge: 67W</td>
+                        </tr>
+                        <tr>
+                            <td>140</td>
+                            <td>Samsung Galaxy M55</td>
+                            <td class="price">₹28,999</td>
+                            <td>CPU: SD 7 Gen 1, RAM: 8GB, ROM: 256GB, Panel: Super AMOLED+</td>
+                        </tr>
+                        <tr>
+                            <td>141</td>
+                            <td>Vivo Y200 Pro</td>
+                            <td class="price">₹24,999</td>
+                            <td>CPU: SD 4 Gen 2, RAM: 8GB, ROM: 128GB, Cell: 5000mAh</td>
+                        </tr>
+                        <tr>
+                            <td>142</td>
+                            <td>OnePlus Nord 4</td>
+                            <td class="price">₹29,999</td>
+                            <td>CPU: SD 7+ Gen 3, RAM: 8GB, ROM: 256GB, Build: Metal Unibody</td>
+                        </tr>
+                        <tr>
+                            <td>143</td>
+                            <td>Realme 12 Pro</td>
+                            <td class="price">₹25,999</td>
+                            <td>CPU: SD 6 Gen 1, RAM: 8GB, ROM: 256GB, Cam: 50MP Sony IMX890</td>
+                        </tr>
+                        <tr>
+                            <td>144</td>
+                            <td>OPPO A79 5G</td>
+                            <td class="price">₹18,999</td>
+                            <td>CPU: Dimensity 6020, RAM: 8GB, ROM: 128GB, Panel: 90Hz LCD</td>
+                        </tr>
+                        <tr>
+                            <td>145</td>
+                            <td>Motorola G84</td>
+                            <td class="price">₹19,999</td>
+                            <td>CPU: SD 695, RAM: 12GB, ROM: 256GB, Display: pOLED 120Hz</td>
+                        </tr>
+                        <tr>
+                            <td>146</td>
+                            <td>Xiaomi Redmi Note 13 Pro+</td>
+                            <td class="price">₹31,999</td>
+                            <td>CPU: Dimensity 7200-Ultra, RAM: 12GB, ROM: 256GB, Cam: 200MP</td>
+                        </tr>
+                        <tr>
+                            <td>147</td>
+                            <td>Samsung Galaxy F54</td>
+                            <td class="price">₹27,999</td>
+                            <td>CPU: Exynos 1380, RAM: 8GB, ROM: 256GB, Cell: 6000mAh</td>
+                        </tr>
+                        <tr>
+                            <td>148</td>
+                            <td>Vivo V29 Pro</td>
+                            <td class="price">₹38,999</td>
+                            <td>CPU: Dimensity 8200, RAM: 12GB, ROM: 256GB, Cam: Aura Light</td>
+                        </tr>
+                        <tr>
+                            <td>149</td>
+                            <td>iQOO 12</td>
+                            <td class="price">₹52,999</td>
+                            <td>CPU: SD 8 Gen 3, RAM: 12GB, ROM: 256GB, Display: 2K E7 AMOLED</td>
+                        </tr>
+                        <tr>
+                            <td>150</td>
+                            <td>OnePlus 12T</td>
+                            <td class="price">₹49,999</td>
+                            <td>CPU: SD 8 Gen 2, RAM: 16GB, ROM: 256GB, Charge: 100W SUPERVOOC</td>
+                        </tr>
+                        <tr>
+                            <td>156</td>
+                            <td>iPhone 15</td>
+                            <td class="price">₹79,900</td>
+                            <td>CPU: A16 Bionic, RAM: 6GB, ROM: 128GB, Display: Dynamic Island</td>
+                        </tr>
+                        <tr>
+                            <td>157</td>
+                            <td>iPhone 15 Pro</td>
+                            <td class="price">₹1,34,900</td>
+                            <td>CPU: A17 Pro, RAM: 8GB, ROM: 256GB, Build: Titanium Frame</td>
+                        </tr>
+                        <tr>
+                            <td>158</td>
+                            <td>Samsung Galaxy S24+</td>
+                            <td class="price">₹99,999</td>
+                            <td>CPU: Exynos 2400, RAM: 12GB, ROM: 512GB, AI: Circle to Search</td>
+                        </tr>
+                        <tr>
+                            <td>159</td>
+                            <td>Google Pixel 9</td>
+                            <td class="price">₹79,999</td>
+                            <td>CPU: Tensor G4, RAM: 12GB, ROM: 256GB, AI: Gemini Advanced</td>
+                        </tr>
+                        <tr>
+                            <td>160</td>
+                            <td>Xiaomi 14 Pro</td>
+                            <td class="price">₹79,999</td>
+                            <td>CPU: SD 8 Gen 3, RAM: 12GB, ROM: 512GB, Cam: Leica Summilux</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="table-section">
+                    <h2><i class="fa-solid fa-laptop"></i> SYNAPSE RIGS (LAPTOPS)</h2>
+                    <table>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Specifications</th>
+                        </tr>
+                        <tr>
+                            <td>304</td>
+                            <td>HP 15s (2024)</td>
+                            <td class="price">₹38,990</td>
+                            <td>CPU: i3-12th Gen, RAM: 8GB, SSD: 512GB, OS: Win 11</td>
+                        </tr>
+                        <tr>
+                            <td>305</td>
+                            <td>Lenovo IdeaPad Slim 3</td>
+                            <td class="price">₹35,990</td>
+                            <td>CPU: Ryzen 5 7520U, RAM: 16GB, SSD: 512GB, Mass: 1.6kg</td>
+                        </tr>
+                        <tr>
+                            <td>322</td>
+                            <td>HP Laptop 15</td>
+                            <td class="price">₹45,990</td>
+                            <td>CPU: i5-1335U, RAM: 8GB, SSD: 512GB, OS: Win 11</td>
+                        </tr>
+                        <tr>
+                            <td>310</td>
+                            <td>MSI Modern 15</td>
+                            <td class="price">₹54,990</td>
+                            <td>CPU: i7-1355U, RAM: 16GB, SSD: 512GB, Build: Military Std</td>
+                        </tr>
+                        <tr>
+                            <td>311</td>
+                            <td>ASUS Vivobook 16</td>
+                            <td class="price">₹51,990</td>
+                            <td>CPU: i5-12500H, RAM: 16GB, SSD: 512GB, Display: 16" WUXGA</td>
+                        </tr>
+                        <tr>
+                            <td>312</td>
+                            <td>Acer Swift Go 14</td>
+                            <td class="price">₹59,990</td>
+                            <td>CPU: Ryzen 5 7535U, RAM: 16GB, Panel: OLED 90Hz, Weight: 1.25kg</td>
+                        </tr>
+                        <tr>
+                            <td>313</td>
+                            <td>HP Victus 15</td>
+                            <td class="price">₹64,990</td>
+                            <td>CPU: Ryzen 5 5600H, GPU: RTX 3050, RAM: 16GB, Refresh: 144Hz</td>
+                        </tr>
+                        <tr>
+                            <td>314</td>
+                            <td>ASUS TUF Gaming F15</td>
+                            <td class="price">₹68,900</td>
+                            <td>CPU: i5-11400H, GPU: RTX 3050, RAM: 16GB, Battery: 90WHr</td>
+                        </tr>
+                        <tr>
+                            <td>315</td>
+                            <td>MSI Thin GF63</td>
+                            <td class="price">₹61,990</td>
+                            <td>CPU: i7-12650H, GPU: RTX 4050, RAM: 16GB, Weight: 1.86kg</td>
+                        </tr>
+                        <tr>
+                            <td>323</td>
+                            <td>LG Gram 17</td>
+                            <td class="price">₹82,990</td>
+                            <td>CPU: i7-1360P, RAM: 16GB, SSD: 512GB, Mass: 1.35kg</td>
+                        </tr>
+                        <tr>
+                            <td>501</td>
+                            <td>MacBook Air M3</td>
+                            <td class="price">₹1,04,990</td>
+                            <td>CPU: Apple M3, RAM: 8GB, SSD: 256GB, Neural: 16-Core</td>
+                        </tr>
+                        <tr>
+                            <td>502</td>
+                            <td>MacBook Pro M3 Max</td>
+                            <td class="price">₹3,19,900</td>
+                            <td>CPU: Apple M3 Max, GPU: 40-Core, RAM: 36GB, SSD: 1TB</td>
+                        </tr>
+                        <tr>
+                            <td>306</td>
+                            <td>Dell Inspiron 15</td>
+                            <td class="price">₹42,990</td>
+                            <td>CPU: i5-1235U, RAM: 8GB, SSD: 512GB, Display: 15.6" FHD</td>
+                        </tr>
+                        <tr>
+                            <td>307</td>
+                            <td>ASUS VivoBook 14</td>
+                            <td class="price">₹39,990</td>
+                            <td>CPU: Ryzen 5 5500U, RAM: 8GB, SSD: 512GB, Weight: 1.4kg</td>
+                        </tr>
+                        <tr>
+                            <td>308</td>
+                            <td>Acer Aspire 5</td>
+                            <td class="price">₹44,990</td>
+                            <td>CPU: i5-12450H, RAM: 16GB, SSD: 512GB, Display: 15.6" FHD IPS</td>
+                        </tr>
+                        <tr>
+                            <td>309</td>
+                            <td>Lenovo ThinkPad E14</td>
+                            <td class="price">₹58,990</td>
+                            <td>CPU: i7-1355U, RAM: 16GB, SSD: 512GB, Build: Military Grade</td>
+                        </tr>
+                        <tr>
+                            <td>316</td>
+                            <td>Dell XPS 13</td>
+                            <td class="price">₹1,09,990</td>
+                            <td>CPU: i7-1360P, RAM: 16GB, SSD: 512GB, Display: 13.4" OLED</td>
+                        </tr>
+                        <tr>
+                            <td>317</td>
+                            <td>ASUS ROG Strix G16</td>
+                            <td class="price">₹1,24,990</td>
+                            <td>CPU: i9-13980HX, GPU: RTX 4060, RAM: 16GB, Refresh: 165Hz</td>
+                        </tr>
+                        <tr>
+                            <td>318</td>
+                            <td>Lenovo Legion 5 Pro</td>
+                            <td class="price">₹1,15,990</td>
+                            <td>CPU: Ryzen 7 7745HX, GPU: RTX 4070, RAM: 16GB, Display: 16" WQXGA</td>
+                        </tr>
+                        <tr>
+                            <td>319</td>
+                            <td>HP Omen 16</td>
+                            <td class="price">₹98,990</td>
+                            <td>CPU: i7-13700HX, GPU: RTX 4050, RAM: 16GB, Cooling: Vapor Chamber</td>
+                        </tr>
+                        <tr>
+                            <td>320</td>
+                            <td>Acer Predator Helios 300</td>
+                            <td class="price">₹1,05,990</td>
+                            <td>CPU: i7-13700H, GPU: RTX 4060, RAM: 16GB, Display: 15.6" 165Hz</td>
+                        </tr>
+                        <tr>
+                            <td>321</td>
+                            <td>MSI Creator Z16</td>
+                            <td class="price">₹1,89,990</td>
+                            <td>CPU: i9-12900H, GPU: RTX 4070, RAM: 32GB, Display: 16" QHD+ Touch</td>
+                        </tr>
+                        <tr>
+                            <td>324</td>
+                            <td>ASUS ZenBook 14 OLED</td>
+                            <td class="price">₹79,990</td>
+                            <td>CPU: i7-1355U, RAM: 16GB, SSD: 512GB, Panel: 14" 2.8K OLED</td>
+                        </tr>
+                        <tr>
+                            <td>325</td>
+                            <td>Microsoft Surface Laptop 5</td>
+                            <td class="price">₹1,29,990</td>
+                            <td>CPU: i7-1255U, RAM: 16GB, SSD: 512GB, Display: 13.5" PixelSense</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="table-section">
+                    <h2><i class="fa-solid fa-mobile-retro"></i> FOLDABLE TERMINALS</h2>
+                    <table>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Specifications</th>
+                        </tr>
+                        <tr>
+                            <td>405</td>
+                            <td>Tecno Phantom V Flip</td>
+                            <td class="price">₹54,999</td>
+                            <td>CPU: Dimensity 8050, RAM: 8GB, Build: Flip Style</td>
+                        </tr>
+                        <tr>
+                            <td>406</td>
+                            <td>Motorola Razr 50</td>
+                            <td class="price">₹64,999</td>
+                            <td>CPU: Dimensity 7300X, RAM: 8GB, Cover: 3.6" pOLED</td>
+                        </tr>
+                        <tr>
+                            <td>407</td>
+                            <td>Galaxy Z Flip 6</td>
+                            <td class="price">₹1,09,999</td>
+                            <td>CPU: SD 8 Gen 3, RAM: 12GB, AI: Galaxy AI</td>
+                        </tr>
+                        <tr>
+                            <td>404</td>
+                            <td>OnePlus Open</td>
+                            <td class="price">₹1,39,999</td>
+                            <td>CPU: SD 8 Gen 2, RAM: 16GB, Cam: Hasselblad</td>
+                        </tr>
+                        <tr>
+                            <td>403</td>
+                            <td>Galaxy Z Fold 6</td>
+                            <td class="price">₹1,64,999</td>
+                            <td>CPU: SD 8 Gen 3, RAM: 12GB, AI: Galaxy AI</td>
+                        </tr>
+                        <tr>
+                            <td>408</td>
+                            <td>Pixel 9 Pro Fold</td>
+                            <td class="price">₹1,72,999</td>
+                            <td>CPU: Tensor G4, RAM: 16GB, Display: 8" LTPO</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-matrix">
+                <div class="footer-brand">
+                    <div class="logo">STUDIO BLITZ</div>
+                    <p class="mono-text">ADVANCED TELEMETRY FOR THE MODERN TECH ECOSYSTEM. TRACKING PEAK PERFORMANCE
+                        SINCE 2024.</p>
+                </div>
+                <div class="footer-column">
+                    <h4>SYSTEMS</h4>
+                    <a href="index.html">DISCOVER</a>
+                    <a href="compare.html">COMPARE</a>
+                    <a href="updates.html">FEED</a>
+                    <a href="DEVICES_MANIFEST.html">MANIFEST</a>
+                </div>
+
+                <div class="footer-bottom"
+                    style="grid-column: 1 / -1; margin-top: 40px; padding-top: 20px; border-top: 1px dashed #ccc; display: flex; justify-content: space-between;">
+                    <span class="mono-text">&copy; 2026 STUDIO BLITZ // ALL_RIGHTS_RESERVED</span>
+                    <div class="social-telemetry">
+                        <a href="#"><i class="fa-brands fa-github"></i></a>
+                        <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                        <a href="#"><i class="fa-brands fa-discord"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        const searchStats = document.getElementById('searchStats');
+        const noResults = document.getElementById('noResults');
+        const tables = document.querySelectorAll('table');
+
+        // Get all data rows (excluding header rows)
+        const allRows = Array.from(tables).flatMap(table =>
+            Array.from(table.querySelectorAll('tr')).filter((row, index) => index !== 0)
+        );
+
+        const totalDevices = allRows.length;
+
+        // Search function
+        function performSearch() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+
+            if (searchTerm === '') {
+                // Show all rows
+                allRows.forEach(row => row.classList.remove('hidden'));
+                searchStats.textContent = `Showing all ${totalDevices} devices`;
+                noResults.classList.remove('show');
+                return;
+            }
+
+            let visibleCount = 0;
+
+            allRows.forEach(row => {
+                const rowText = row.textContent.toLowerCase();
+
+                if (rowText.includes(searchTerm)) {
+                    row.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    row.classList.add('hidden');
+                }
+            });
+
+            // Update stats
+            if (visibleCount === 0) {
+                searchStats.textContent = 'No matches found';
+                noResults.classList.add('show');
+            } else {
+                searchStats.textContent = `Showing ${visibleCount} of ${totalDevices} devices`;
+                noResults.classList.remove('show');
+            }
+        }
+
+        // Event listeners
+        searchInput.addEventListener('input', performSearch);
+        searchInput.addEventListener('keyup', performSearch);
+
+        // Clear search on Escape key
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                searchInput.value = '';
+                performSearch();
+            }
+        });
+
+        // Initialize
+        searchStats.textContent = `Showing all ${totalDevices} devices`;
+    </script>
+</body>
+
+</html>

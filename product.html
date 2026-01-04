@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Overview | Studio Blitz</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700;800;900&family=JetBrains+Mono&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Single Column Layout */
+        .product-hero {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 30px;
+        }
+
+        /* Gallery Section */
+        .product-gallery-section {
+            background: var(--glass);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .gallery-header {
+            font-family: var(--font-mono);
+            font-size: 0.55rem;
+            color: var(--primary);
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            text-align: center;
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 6px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: 600px 1fr;
+            gap: 25px;
+            align-items: start;
+        }
+
+        .gallery-left {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-visual {
+            position: relative;
+            height: 280px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at center, rgba(0, 0, 0, 0.04) 0%, rgba(0, 0, 0, 0.01) 70%);
+            border-radius: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+            overflow: hidden;
+            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.02);
+        }
+
+        .product-visual::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.15) 100%);
+            pointer-events: none;
+        }
+
+        .product-visual img {
+            max-width: 85%;
+            max-height: 240px;
+            object-fit: contain;
+            filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.1));
+            transition: 0.6s cubic-bezier(0.2, 1, 0.2, 1);
+            z-index: 1;
+        }
+
+        .product-visual:hover img {
+            transform: scale(1.05);
+            filter: drop-shadow(0 20px 45px rgba(0, 0, 0, 0.6)) contrast(1.1);
+        }
+
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 6px;
+            margin-bottom: 0;
+        }
+
+        .gallery-thumb {
+            aspect-ratio: 1;
+            border: 1px solid var(--glass-border);
+            border-radius: 6px;
+            cursor: pointer;
+            padding: 4px;
+            background: rgba(255, 255, 255, 0.02);
+            transition: 0.3s;
+            object-fit: contain;
+            max-height: 60px;
+        }
+
+        .gallery-thumb:hover,
+        .gallery-thumb.active {
+            border-color: var(--primary);
+            background: rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Metrics Column */
+        .metrics-column {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* Price Display */
+        .price-display {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.15) 0%, rgba(255, 0, 60, 0.1) 100%);
+            border: 1px solid rgba(255, 0, 60, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .price-display::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            to {
+                left: 100%;
+            }
+        }
+
+        .price-label {
+            font-family: var(--font-mono);
+            font-size: 0.5rem;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        .price-value {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #000;
+            line-height: 1;
+        }
+
+        /* Release Date */
+        .release-date {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .release-label {
+            font-family: var(--font-mono);
+            font-size: 0.5rem;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .release-value {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        /* Price Display */
+        .price-display {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.1) 100%);
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            padding: 18px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .price-display::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            to {
+                left: 100%;
+            }
+        }
+
+        .price-label {
+            font-family: var(--font-mono);
+            font-size: 0.55rem;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+            margin-bottom: 6px;
+        }
+
+        .price-value {
+            font-size: 2.4rem;
+            font-weight: 900;
+            color: #000;
+            line-height: 1;
+        }
+
+        /* Release Date */
+        .release-date {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .release-label {
+            font-family: var(--font-mono);
+            font-size: 0.5rem;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .release-value {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            padding: 15px;
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+
+        .metric-card:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: var(--primary);
+        }
+
+        .metric-label {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+        }
+
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-color);
+        }
+
+        .metric-card.antutu .metric-value {
+            color: var(--primary);
+        }
+
+        .metric-card.camera .metric-value,
+        .metric-card.gpu .metric-value {
+            color: var(--secondary);
+        }
+
+        /* Segment Badge */
+        .segment-badge {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.08) 100%);
+            border: 1px solid var(--primary);
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .segment-text {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+
+        /* Product Info Section */
+        .product-info-section {
+            background: var(--glass);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .category-tag {
+            font-family: var(--font-mono);
+            font-size: 0.55rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: inline-block;
+            padding: 5px 10px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 6px;
+            letter-spacing: 1px;
+        }
+
+        .product-info-section h1 {
+            font-size: 2.2rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            margin-bottom: 12px;
+            color: #000;
+        }
+
+        #product-desc {
+            color: var(--text-dim);
+            margin-bottom: 20px;
+            line-height: 1.6;
+            font-size: 0.85rem;
+            padding-left: 12px;
+            border-left: 2px solid var(--primary);
+        }
+
+        /* Action Buttons in Info Panel */
+        .info-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .action-btn {
+            padding: 16px 24px;
+            font-size: 0.75rem;
+            font-family: var(--font-heading);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 10px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(135deg, var(--primary), #333333);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .action-btn.primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .action-btn.secondary {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            color: var(--text-dim);
+            backdrop-filter: var(--glass-blur);
+        }
+
+        .action-btn.secondary:hover {
+            border-color: #333;
+            color: #333;
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        /* Quick Stats Section */
+        .quick-stats-section {
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid var(--glass-border);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stats-title {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            color: var(--primary);
+            margin-bottom: 18px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .quick-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            font-size: 0.75rem;
+            color: var(--text-color);
+            font-family: var(--font-mono);
+        }
+
+        /* Spec Grid */
+        .spec-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .spec-item {
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            transition: 0.3s;
+        }
+
+        .spec-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: var(--secondary);
+        }
+
+        .spec-label {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            letter-spacing: 1px;
+        }
+
+        .spec-value {
+            color: var(--text-color);
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        /* Pros/Cons */
+        .pros-cons-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .pc-box {
+            padding: 18px;
+            border-radius: 10px;
+            animation: techReveal 0.6s cubic-bezier(0.8, 0, 0.2, 1) both;
+        }
+
+        .pc-box:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .pros-box {
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .cons-box {
+            background: rgba(0, 0, 0, 0.01);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .pc-title {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pros-box .pc-title {
+            color: #000;
+        }
+
+        .cons-box .pc-title {
+            color: #666;
+        }
+
+        .pc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .pc-list li {
+            font-size: 0.8rem;
+            margin-bottom: 6px;
+            position: relative;
+            padding-left: 18px;
+            color: var(--text-dim);
+        }
+
+        .pc-list li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        @keyframes techReveal {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .product-hero {
+                grid-template-columns: 1fr 1fr;
+                /* Two columns for medium screens */
+            }
+
+            .product-actions {
+                grid-column: span 2;
+                /* Actions span both columns */
+            }
+        }
+
+        @media (max-width: 900px) {
+            .product-hero {
+                grid-template-columns: 1fr;
+                /* Single column for small screens */
+            }
+
+            .product-actions {
+                grid-column: span 1;
+            }
+
+            .spec-grid {
+                grid-template-columns: 1fr;
+                /* Specs become single column */
+            }
+
+            .pros-cons-grid {
+                grid-template-columns: 1fr;
+                /* Pros/Cons become single column */
+            }
+        }
+    </style>
+</head>
+
+<body class="product-page">
+    <!-- Navigation -->
+    <header>
+        <div class="container">
+            <nav>
+                <a href="index.html" class="logo">STUDIO BLITZ</a>
+                <ul class="nav-links">
+                    <li><a href="index.html">Discover</a></li>
+                    <li><a href="updates.html">Updates</a></li>
+                    <li><a href="compare.html">Compare</a></li>
+                </ul>
+                <a href="index.html" class="btn-primary">BACK TO CATALOG</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div id="product-terminal">
+            <!-- Loaded via JS -->
+            <div style="padding: 100px; text-align: center; font-family: var(--font-mono);">
+                INITIALIZING_TERMINAL...
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-matrix">
+                <div class="footer-brand">
+                    <div class="logo">STUDIO BLITZ</div>
+                    <p>Advanced telemetry for the modern tech ecosystem. Tracking peak performance since 2024.</p>
+                </div>
+                <div class="footer-column">
+                    <h4>SYSTEMS</h4>
+                    <a href="index.html">Discover</a>
+                    <a href="compare.html">Compare</a>
+                    <a href="updates.html">Feed</a>
+                </div>
+                <div class="footer-bottom">
+                    <span>&copy; 2026 STUDIO BLITZ // ALL_RIGHTS_RESERVED</span>
+                    <div class="social-telemetry">
+                        <a href="#"><i class="fa-brands fa-github"></i></a>
+                        <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                        <a href="#"><i class="fa-brands fa-discord"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="data.js"></script>
+    <script type="module">
+        import { db, collection, addDoc, getDocs, query, where } from './firebase-config.js';
+
+        let currentProduct = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const params = new URLSearchParams(window.location.search);
+            const id = parseInt(params.get('id'));
+
+            if (!id || !window.techData) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // --- CLOUD SYNC ---
+            try {
+                const overSnap = await getDocs(collection(db, "overrides"));
+                const cloudOverrides = {};
+                overSnap.forEach(doc => cloudOverrides[doc.id] = doc.data());
+
+                const prodSnap = await getDocs(collection(db, "products"));
+                const cloudProducts = [];
+                prodSnap.forEach(doc => cloudProducts.push(doc.data()));
+
+                const deletedIds = JSON.parse(localStorage.getItem('deleted_tech_ids') || '[]');
+                if (deletedIds.includes(id)) {
+                    window.location.href = 'index.html';
+                    return;
+                }
+
+                let allProds = [...window.techData.products, ...cloudProducts];
+                allProds = allProds.map(p => {
+                    if (cloudOverrides[p.id]) return { ...p, ...cloudOverrides[p.id] };
+                    return p;
+                });
+
+                currentProduct = allProds.find(p => p.id === id);
+            } catch (e) {
+                console.warn("Cloud Sync Offline.", e);
+                currentProduct = window.techData.products.find(p => p.id === id);
+            }
+
+            if (!currentProduct) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            renderProduct(currentProduct);
+            loadCloudReviews(id);
+
+            // Expose to window for inline onclicks
+            window.setRating = setRating;
+            window.submitReview = submitReviewCloud;
+            window.updateMainImage = updateMainImage;
+        });
+
+        function renderProduct(product) {
+            document.title = `${product.name} | Studio Blitz`;
+            const terminal = document.getElementById('product-terminal');
+
+            const specHtml = Object.entries(product.specs).map(([key, value]) => `
+                <div class="spec-item">
+                    <span class="spec-label">${key}</span>
+                    <span class="spec-value">${value}</span>
+                </div>
+            `).join('');
+
+            let galleryHtml = '';
+            if (product.images && product.images.length > 1) {
+                galleryHtml = `
+                    <div class="image-gallery">
+                        ${product.images.map((img, idx) => `
+                            <img src="${img}" class="gallery-thumb ${idx === 0 ? 'active' : ''}" 
+                                 onclick="updateMainImage('${img}', this)" 
+                                 onerror="this.style.display='none'">
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            const prosHtml = product.pros ? product.pros.map(p => `<li>${p}</li>`).join('') : '<li>DATA_PENDING</li>';
+            const consHtml = product.cons ? product.cons.map(c => `<li>${c}</li>`).join('') : '<li>DATA_PENDING</li>';
+
+            terminal.innerHTML = `
+                <div class="product-hero">
+                    <!-- Gallery Section -->
+                    <div class="product-gallery-section">
+                        <div class="gallery-header">VISUAL_TERMINAL</div>
+                        <div class="gallery-grid">
+                            <div class="gallery-left">
+                                <div class="product-visual">
+                                    <img id="main-product-image" src="${product.image}" alt="${product.name}" onerror="this.src='assets/products/101.jpg'">
+                                </div>
+                                ${galleryHtml}
+                            </div>
+                            <div class="metrics-column">
+                                <div class="price-display">
+                                    <div class="price-label">RETAIL_PRICE</div>
+                                    <div class="price-value">${product.price}</div>
+                                </div>
+                                
+                                ${product.releaseDate ? `
+                                    <div class="release-date">
+                                        <div class="release-label">RELEASE_DATE</div>
+                                        <div class="release-value">${product.releaseDate}</div>
+                                    </div>
+                                ` : ''}
+                                
+                                <div class="metrics-grid">
+                                    ${product.antutu ? `
+                                        <div class="metric-card antutu">
+                                            <div class="metric-label">CPU_ANTUTU_SCORE</div>
+                                            <div class="metric-value">${product.antutu.toLocaleString()}</div>
+                                        </div>
+                                    ` : ''}
+                                    
+                                    ${product.cameraRating ? `
+                                        <div class="metric-card camera">
+                                            <div class="metric-label">CAMERA_RATING</div>
+                                            <div class="metric-value">${product.cameraRating}/10</div>
+                                        </div>
+                                    ` : ''}
+                                    
+                                    ${product.gpuRating ? `
+                                        <div class="metric-card gpu">
+                                            <div class="metric-label">GPU_PERFORMANCE</div>
+                                            <div class="metric-value">${product.gpuRating}/10</div>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                                
+                                ${product.segment ? `
+                                    <div class="segment-badge">
+                                        <div class="segment-text">${product.segment.replace(/_/g, ' ')}</div>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Product Info Section -->
+                    <div class="product-info-section">
+                        <span class="category-tag">CATEGORY_${product.category.toUpperCase()}</span>
+                        <h1>${product.name}</h1>
+                        <p id="product-desc">${product.description || 'TECHNICAL_SPECIFICATIONS_LOADING...'}</p>
+                        
+                        <div class="info-actions">
+                            <a href="${product.link}" class="action-btn primary" target="_blank">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                                BUY NOW
+                            </a>
+                            <a href="compare.html" class="action-btn secondary">
+                                <i class="fa-solid fa-scale-balanced"></i>
+                                COMPARE
+                            </a>
+                        </div>
+                        
+                        <div class="quick-stats-section">
+                            <div class="stats-title">QUICK_STATS</div>
+                            <div class="quick-stats">
+                                <div class="stat-item">
+                                    <span class="stat-label">CATEGORY</span>
+                                    <span class="stat-value">${product.category}</span>
+                                </div>
+                                ${product.segment ? `
+                                    <div class="stat-item">
+                                        <span class="stat-label">SEGMENT</span>
+                                        <span class="stat-value">${product.segment.replace(/_/g, ' ')}</span>
+                                    </div>
+                                ` : ''}
+                                <div class="stat-item">
+                                    <span class="stat-label">PRICE_TIER</span>
+                                    <span class="stat-value">${product.priceValue < 20000 ? 'BUDGET' : product.priceValue < 50000 ? 'MID-RANGE' : product.priceValue < 100000 ? 'PREMIUM' : 'FLAGSHIP'}</span>
+                                </div>
+                                ${product.antutu ? `
+                                    <div class="stat-item">
+                                        <span class="stat-label">PERFORMANCE</span>
+                                        <span class="stat-value">${product.antutu > 1000000 ? 'FLAGSHIP' : product.antutu > 500000 ? 'HIGH' : 'MODERATE'}</span>
+                                    </div>
+                                ` : ''}
+                                <div class="stat-item">
+                                    <span class="stat-label">PRODUCT_ID</span>
+                                    <span class="stat-value">#${product.id}</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">STATUS</span>
+                                    <span class="stat-value" style="color: #10b981;">AVAILABLE</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="spec-grid">
+                            ${specHtml}
+                        </div>
+
+                        <div class="pros-cons-grid">
+                            <div class="pc-box pros-box">
+                                <div class="pc-title"><i class="fa-solid fa-circle-check"></i> ADVANTAGES</div>
+                                <ul class="pc-list">${prosHtml}</ul>
+                            </div>
+                            <div class="pc-box cons-box">
+                                <div class="pc-title"><i class="fa-solid fa-circle-xmark"></i> LIMITATIONS</div>
+                                <ul class="pc-list">${consHtml}</ul>
+                            </div>
+                        </div>
+
+                         <!-- REVIEWS SECTION -->
+                        <div id="reviews-section" style="margin-top: 60px; border-top: 1px solid var(--border); padding-top: 40px;">
+                            <h2 style="margin-bottom: 30px; font-family: var(--font-heading); text-transform: uppercase;">User Reviews</h2>
+                            
+                            <!-- Review Form -->
+                            <div class="review-form" style="background: var(--surface); padding: 30px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 40px;">
+                                <h3 style="margin-bottom: 20px; font-size: 1rem; color: var(--primary);">LEAVE_A_COMMENT</h3>
+                                
+                                <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 20px;">
+                                    <input type="text" id="review-name" placeholder="YOUR NAME (Optional)" style="background: #000; border: 1px solid var(--border); padding: 10px; color: #fff; font-family: var(--font-mono); border-radius: 4px; flex-grow: 1;">
+                                    
+                                    <div class="star-input" style="display: flex; gap: 5px;">
+                                        <i class="fa-regular fa-star" data-val="1" onclick="setRating(1)" style="cursor: pointer; color: #000;"></i>
+                                        <i class="fa-regular fa-star" data-val="2" onclick="setRating(2)" style="cursor: pointer; color: #000;"></i>
+                                        <i class="fa-regular fa-star" data-val="3" onclick="setRating(3)" style="cursor: pointer; color: #000;"></i>
+                                        <i class="fa-regular fa-star" data-val="4" onclick="setRating(4)" style="cursor: pointer; color: #000;"></i>
+                                        <i class="fa-regular fa-star" data-val="5" onclick="setRating(5)" style="cursor: pointer; color: #000;"></i>
+                                        <input type="hidden" id="review-rating" value="0">
+                                    </div>
+                                </div>
+                                
+                                <textarea id="review-text" placeholder="SHARE YOUR EXPERIENCE..." style="width: 100%; height: 100px; background: #000; border: 1px solid var(--border); padding: 15px; color: #fff; font-family: var(--font-mono); border-radius: 4px; margin-bottom: 20px; resize: vertical;"></textarea>
+                                
+                                <button onclick="submitReview(${product.id})" class="action-btn primary" style="width: auto; padding: 10px 30px; font-size: 0.8rem;">POST REVIEW</button>
+                            </div>
+
+                            <!-- Reviews List -->
+                            <div id="reviews-list" style="display: flex; flex-direction: column; gap: 20px;">
+                                <!-- Populated via JS -->
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            `;
+
+            loadCloudReviews(productId);
+            alert("REVIEW POSTED SUCCESSFULLY");
+        }
+
+        let currentRating = 0;
+        function setRating(val) {
+            currentRating = val;
+            const stars = document.querySelectorAll('.star-input i');
+            stars.forEach((s, idx) => {
+                if (idx < val) {
+                    s.classList.replace('fa-regular', 'fa-solid');
+                    s.style.color = 'var(--primary)';
+                } else {
+                    s.classList.replace('fa-solid', 'fa-regular');
+                    s.style.color = '#ccc';
+                }
+            });
+        }
+
+        async function submitReviewCloud(productId) {
+            const name = document.getElementById('review-name').value.trim() || 'ANONYMOUS';
+            const text = document.getElementById('review-text').value.trim();
+            if (currentRating === 0 || !text) return alert("RATING AND COMMENT REQUIRED");
+
+            try {
+                await addDoc(collection(db, "reviews"), {
+                    prodId: String(productId),
+                    name: name,
+                    rating: currentRating,
+                    text: text,
+                    date: new Date().toLocaleDateString()
+                });
+                alert("REVIEW SYNCED TO CLOUD");
+                location.reload();
+            } catch (e) { alert("Sync Error: " + e.message); }
+        }
+
+        async function loadCloudReviews(productId) {
+            const list = document.getElementById('reviews-list');
+            try {
+                const q = query(collection(db, "reviews"), where("prodId", "==", String(productId)));
+                const snap = await getDocs(q);
+                if (snap.empty) {
+                    list.innerHTML = '<div style="text-align: center; color: var(--text-dim); padding: 40px; border: 1px dashed var(--border);">NO REVIEWS YET. BE THE FIRST.</div>';
+                    return;
+                }
+                list.innerHTML = '';
+                snap.forEach(doc => {
+                    const r = doc.data();
+                    const card = document.createElement('div');
+                    card.className = 'review-card';
+                    card.style.background = 'rgba(255,255,255,0.03)';
+                    card.style.padding = '20px';
+                    card.style.borderRadius = '8px';
+                    card.style.borderBottom = '1px solid var(--border)';
+                    card.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span style="color: var(--primary); font-family: var(--font-heading); font-weight: 700;">${r.name}</span>
+                            <div style="color: #000;">${'<i class="fa-solid fa-star"></i>'.repeat(r.rating)}</div>
+                        </div>
+                        <p style="color: var(--text-color); font-size: 0.9rem; margin-bottom: 10px; line-height: 1.6;">${r.text}</p>
+                        <div style="font-size: 0.7rem; color: var(--text-dim); font-family: var(--font-mono);">POSTED: ${r.date}</div>
+                    `;
+                    list.appendChild(card);
+                });
+            } catch (e) {
+                console.error("Error loading reviews", e);
+                list.innerHTML = '// ERROR_FETCHING_REVIEWS';
+            }
+        }
+
+        function updateMainImage(src, thumb) {
+            document.getElementById('main-product-image').src = src;
+            document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('active'));
+            if (thumb) thumb.classList.add('active');
+        }
+    </script>
+</body>
+
+</html>

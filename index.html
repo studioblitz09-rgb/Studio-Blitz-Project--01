@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Blitz | Tech Manifest</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Silkscreen&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="container">
+            <nav>
+                <a href="index.html" class="logo">STUDIO BLITZ</a>
+                <ul class="nav-links">
+                    <li><a href="index.html" class="active">Discover</a></li>
+                    <li><a href="updates.html">Updates</a></li>
+                    <li><a href="compare.html">Compare</a></li>
+                </ul>
+                <a href="#featured" class="btn-primary">EXPLORE DATA</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>UNLEASH THE <span class="pixel-text glitch-text" data-text="BLITZ">BLITZ</span></h1>
+                    <p>PREMIUM DEVICE METRICS. ADVANCED TELEMETRY. NO FLUFF.</p>
+                    <div style="display: flex; gap: 20px; justify-content: center;">
+                        <a href="compare.html" class="btn-primary">START COMPARE</a>
+                        <a href="updates.html" class="btn-outline">LATEST INTEL</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="featured">
+            <div class="container">
+                <div class="section-title">
+                    <h2>THE <span class="pixel-text">LINEUP</span></h2>
+                    <p class="mono-text">CURATED DEVICES // RANKED BY PERFORMANCE</p>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="search-container">
+                    <div class="search-wrapper">
+                        <input type="text" id="lineupSearch" placeholder="SEARCH DEVICES BY NAME, BRAND, OR SPECS..."
+                            autocomplete="off">
+                        <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+                    </div>
+                </div>
+
+                <div id="global-no-results"
+                    style="display: none; text-align: center; padding: 100px 20px; border: 1px dashed var(--border-color); margin: 40px 0; font-family: var(--font-mono); color: var(--text-dim);">
+                    <i class="fa-solid fa-microchip-slash"
+                        style="font-size: 3rem; margin-bottom: 20px; display: block;"></i>
+                    // ERROR: NO_MATCHING_TELEMETRY_FOUND_IN_DATABASE //
+                </div>
+
+                <!-- PHONES SECTION -->
+                <div id="phone-category-section" class="category-section">
+                    <div id="neural-jump-anchor" class="category-header">
+                        <h2 style="margin: 0; letter-spacing: -1px; font-size: 1.5rem;"><i
+                                class="fa-solid fa-mobile-screen"></i> SMARTPHONES</h2>
+                        <select id="quick-nexus" class="terminal-select"
+                            style="padding: 10px; font-family: 'Space Mono'; border: 1px solid #000; background: #fff;">
+                            <option value="">JUMP TO CATEGORY</option>
+                            <option value="neural-jump-anchor">PHONES</option>
+                            <option value="synapse-jump-anchor">LAPTOPS</option>
+                            <option value="tablet-jump-anchor">TABLETS</option>
+                            <option value="foldable-jump-anchor">FOLDABLES</option>
+                        </select>
+                    </div>
+
+                    <div class="price-tier">
+                        <div class="category-header">
+                            <h3><i class="fa-solid fa-microchip"></i> Under 10k - Entry Level</h3>
+                        </div>
+                        <div class="grid" id="grid-under-10"></div>
+                    </div>
+
+                    <div class="price-tier">
+                        <div class="category-header">
+                            <h3><i class="fa-solid fa-bolt"></i> 10k - 20k Budget Kings</h3>
+                        </div>
+                        <div class="grid" id="grid-10-20"></div>
+                    </div>
+
+                    <div class="price-tier">
+                        <div class="category-header">
+                            <h3><i class="fa-solid fa-bolt"></i> 20k - 30k Mid-Range</h3>
+                        </div>
+                        <div class="grid" id="grid-20-30"></div>
+                    </div>
+
+                    <div class="price-tier">
+                        <div class="category-header">
+                            <h3><i class="fa-solid fa-bolt"></i> 30k - 40k Premium</h3>
+                        </div>
+                        <div class="grid" id="grid-30-40"></div>
+                    </div>
+
+                    <div class="price-tier">
+                        <div class="category-header">
+                            <h3><i class="fa-solid fa-plus"></i> 40k - 50k Upper Mid</h3>
+                        </div>
+                        <div class="grid" id="grid-40-50"></div>
+                    </div>
+
+                    <div class="price-tier">
+                        <div class="category-header">
+                            <h3><i class="fa-solid fa-crown"></i> 50k - 60k Elite</h3>
+                        </div>
+                        <div class="grid" id="grid-50-60"></div>
+                    </div>
+
+                    <div class="price-tier">
+                        <div class="category-header">
+                            <h3><i class="fa-solid fa-rocket"></i> 60k+ Ultimate Flagships</h3>
+                        </div>
+                        <div class="grid" id="grid-60-80"></div>
+                    </div>
+                </div>
+
+                <!-- LAPTOPS SECTION -->
+                <div id="laptop-category-section" class="category-section">
+                    <div id="synapse-jump-anchor" class="category-header"
+                        style="margin-top: 100px; border-left: 4px solid var(--accent-color);">
+                        <h2 style="margin: 0; letter-spacing: -1px; font-size: 1.5rem;"><i
+                                class="fa-solid fa-laptop"></i> LAPTOPS</h2>
+                    </div>
+
+                    <div class="price-tier">
+                        <div class="category-header">
+                            <h3><i class="fa-solid fa-laptop"></i> 30k - 40k Essential</h3>
+                        </div>
+                        <div class="grid" id="grid-lap-30-40"></div>
+                    </div>
+
+                    <div class="price-tier">
+                        <div class="category-header">
+                            <h3><i class="fa-solid fa-laptop"></i> 40k - 50k Entry</h3>
+                        </div>
+                        <div class="grid" id="grid-lap-40-50"></div>
+                    </div>
+
+                    <div class="price-tier">
+                        <div class="category-header">
+                            <h3><i class="fa-solid fa-laptop"></i> 50k - 60k Performance</h3>
+                        </div>
+                        <div class="grid" id="grid-lap-50-60"></div>
+                    </div>
+
+                    <div class="price-tier">
+                        <div class="category-header">
+                            <h3><i class="fa-solid fa-gamepad"></i> 60k - 70k Core Gaming</h3>
+                        </div>
+                        <div class="grid" id="grid-lap-60-70"></div>
+                    </div>
+
+                    <div class="price-tier">
+                        <div class="category-header">
+                            <h3><i class="fa-solid fa-rocket"></i> 70k+ High Performance</h3>
+                        </div>
+                        <div class="grid" id="grid-lap-70-plus"></div>
+                    </div>
+                </div>
+
+                <!-- TABLETS SECTION -->
+                <div id="tablet-category-section" class="category-section">
+                    <div id="tablet-jump-anchor" class="category-header"
+                        style="margin-top: 100px; border-left: 4px solid var(--accent-color);">
+                        <h2 style="margin: 0; letter-spacing: -1px; font-size: 1.5rem;"><i
+                                class="fa-solid fa-tablet-screen-button"></i> TABLETS</h2>
+                    </div>
+                    <div class="grid" id="grid-tablets"></div>
+                </div>
+
+                <!-- FOLDABLES SECTION -->
+                <div id="foldable-category-section" class="category-section">
+                    <div id="foldable-jump-anchor" class="category-header"
+                        style="margin-top: 100px; border-left: 4px solid var(--accent-color);">
+                        <h2 style="margin: 0; letter-spacing: -1px; font-size: 1.5rem;"><i
+                                class="fa-solid fa-mobile-retro"></i> FOLDABLES</h2>
+                    </div>
+                    <div class="grid" id="grid-foldables"></div>
+                </div>
+
+                <section class="intelligence-overview"
+                    style="padding: 100px 0; background: #fafafa; border-top: 1px solid var(--border-color);">
+                    <div class="container">
+                        <div class="section-title" style="margin-bottom: 50px;">
+                            <h2>INTELLIGENCE <span class="pixel-text">FEED</span></h2>
+                            <p class="mono-text">LATEST HARDWARE OVERRIDES & MARKET ANALYTICS</p>
+                        </div>
+                        <div class="grid" id="main-news-grid"
+                            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                            <!-- Loaded via JS -->
+                        </div>
+                        <div style="text-align: center; margin-top: 50px;">
+                            <a href="updates.html" class="btn-outline">ACCESS FULL FEED</a>
+                        </div>
+                    </div>
+                </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-matrix">
+                <div class="footer-brand">
+                    <div class="logo">STUDIO BLITZ</div>
+                    <p class="mono-text">ADVANCED TELEMETRY FOR THE MODERN TECH ECOSYSTEM. TRACKING PEAK PERFORMANCE
+                        SINCE 2024.</p>
+                </div>
+                <div class="footer-column">
+                    <h4>SYSTEMS</h4>
+                    <a href="index.html">DISCOVER</a>
+                    <a href="compare.html">COMPARE</a>
+                    <a href="updates.html">FEED</a>
+                </div>
+
+                <div class="footer-bottom"
+                    style="grid-column: 1 / -1; margin-top: 40px; padding-top: 20px; border-top: 1px dashed #ccc; display: flex; justify-content: space-between;">
+                    <span class="mono-text">&copy; 2026 STUDIO BLITZ // ALL_RIGHTS_RESERVED</span>
+                    <div class="social-telemetry">
+                        <a href="#"><i class="fa-brands fa-github"></i></a>
+                        <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                        <a href="#"><i class="fa-brands fa-discord"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,891 @@
+:root {
+    /* --- Botronics Theme Variables --- */
+
+    /* Colors */
+    --bg-color: #ffffff;
+    --text-color: #000000;
+    --text-dim: #666666;
+    --accent-color: #000000;
+    /* Black Accent */
+    --primary: var(--accent-color);
+    /* Mapping for valid script references */
+
+    --accent-glow: rgba(0, 0, 0, 0.1);
+    /* Softer grey glow */
+    --surface-color: #ffffff;
+    --border-color: #e5e5e5;
+    /* Lighter default border */
+    --border-strong: #000000;
+
+    /* Typography */
+    --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-pixel: 'Silkscreen', cursive;
+    --font-mono: 'Space Mono', monospace;
+
+    /* Spacing & Layout */
+    --container-width: 1400px;
+    --header-height: 90px;
+
+    /* Effects */
+    --noise-opacity: 0.03;
+}
+
+/* --- Global Reset & Base --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    position: relative;
+    min-height: 100vh;
+}
+
+/* Noise Texture Overlay */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.4'/%3E%3C/svg%3E");
+    opacity: var(--noise-opacity);
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* The "Glow Frame" - Blue border around the screen */
+body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 4px solid var(--accent-color);
+    box-shadow: inset 0 0 20px var(--accent-glow);
+    z-index: 10000;
+    pointer-events: none;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul {
+    list-style: none;
+}
+
+/* --- Container --- */
+.container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 40px;
+    position: relative;
+}
+
+/* --- Typography Utilities --- */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-heading);
+    color: var(--text-color);
+    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+}
+
+.pixel-text {
+    font-family: var(--font-pixel);
+    color: var(--accent-color);
+    text-transform: uppercase;
+    letter-spacing: 0px;
+}
+
+.mono-text {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+}
+
+/* --- Header --- */
+header {
+    height: var(--header-height);
+    display: flex;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    border-bottom: 1px solid #eee;
+}
+
+header .container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+nav {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* ... existing logo styles ... */
+.logo {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.5rem;
+    letter-spacing: -1px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+/* ... existing nav-links styles ... */
+.nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+    /* Ensure no bullets */
+}
+
+/* ... existing btn styles ... */
+
+/* --- Animations --- */
+.scanline {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: var(--accent-color);
+    opacity: 0.3;
+    animation: scan 3s linear infinite;
+    pointer-events: none;
+    z-index: 9998;
+}
+
+@keyframes scan {
+    0% {
+        top: -10%;
+    }
+
+    100% {
+        top: 110%;
+    }
+}
+
+/* Scroll Reveal */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Stagger delays for grid items handled in JS or via nth-child if strictly CSS, 
+   but JS is better for dynamic grids. We will leave base class here. */
+
+.logo::after {
+    content: "_";
+    animation: blink 1s infinite;
+    color: var(--accent-color);
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+.nav-links {
+    display: flex;
+    gap: 40px;
+}
+
+.nav-links a {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    position: relative;
+    padding: 5px 0;
+}
+
+.nav-links a.active,
+.nav-links a:hover {
+    color: var(--accent-color);
+}
+
+.nav-links a::before {
+    content: "[";
+    margin-right: 5px;
+    opacity: 0;
+    transition: 0.2s;
+    color: var(--accent-color);
+}
+
+.nav-links a::after {
+    content: "]";
+    margin-left: 5px;
+    opacity: 0;
+    transition: 0.2s;
+    color: var(--accent-color);
+}
+
+.nav-links a:hover::before,
+.nav-links a:hover::after,
+.nav-links a.active::before,
+.nav-links a.active::after {
+    opacity: 1;
+}
+
+/* --- Buttons --- */
+.btn-primary,
+.btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 32px;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    border: none;
+    outline: none;
+}
+
+/* Sharp Corners & HUD Markers */
+.btn-primary {
+    background: var(--text-color);
+    color: #fff;
+    border: 1px solid var(--text-color);
+}
+
+.btn-primary:hover {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+    color: #fff;
+    box-shadow: 0 4px 15px var(--accent-glow);
+    transform: translateY(-2px);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.btn-outline:hover {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    background: rgba(0, 0, 0, 0.05);
+    /* Very subtle tint */
+}
+
+/* ... HUD Corner Markers for Buttons ... */
+.btn-primary::before,
+.btn-primary::after,
+.btn-outline::before,
+.btn-outline::after {
+    content: "";
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border: 2px solid transparent;
+    transition: 0.3s;
+}
+
+.btn-primary::before,
+.btn-outline::before {
+    top: -1px;
+    left: -1px;
+    border-top-color: currentColor;
+    border-left-color: currentColor;
+}
+
+.btn-primary::after,
+.btn-outline::after {
+    bottom: -1px;
+    right: -1px;
+    border-bottom-color: currentColor;
+    border-right-color: currentColor;
+}
+
+/* ... */
+
+/* --- Hero Section --- */
+.hero {
+    background: var(--bg-color);
+    /* White background */
+    padding: 120px 0 100px;
+    text-align: center;
+    position: relative;
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-content {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.hero h1 {
+    font-size: 5rem;
+    line-height: 0.9;
+    margin-bottom: 30px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.hero p {
+    font-family: var(--font-mono);
+    color: var(--text-dim);
+    max-width: 600px;
+    margin: 0 auto 50px;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+/* --- Section Headers --- */
+.section-title {
+    margin-bottom: 60px;
+    border-bottom: 1px solid #000;
+    padding-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    text-align: center;
+    flex-direction: column;
+}
+
+.section-title h2 {
+    font-size: 2.5rem;
+    width: 100%;
+}
+
+.section-title p {
+    width: 100%;
+}
+
+.category-header {
+    background: #f5f5f5;
+    border-left: 4px solid var(--text-color);
+    padding: 15px 25px;
+    margin: 60px 0 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.category-header h3 {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+/* ... */
+
+
+/* Remove scanline styles */
+
+/* ... */
+
+/* --- Grid & Cards --- */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 80px;
+}
+
+.card {
+    background: var(--surface-color);
+    border: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: 0.3s ease;
+    padding: 20px;
+}
+
+.card:hover {
+    border-color: var(--accent-color);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    background: #fff;
+    transform: translateY(-5px);
+}
+
+/* HUD Corners for Cards */
+.card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 10px;
+    height: 10px;
+    border-top: 2px solid var(--text-color);
+    border-left: 2px solid var(--text-color);
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.card::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    border-bottom: 2px solid var(--text-color);
+    border-right: 2px solid var(--text-color);
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.card:hover::before,
+.card:hover::after {
+    opacity: 1;
+}
+
+.card-image {
+    height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    background: #f9f9f9;
+}
+
+.card-image img {
+    max-width: 90%;
+    max-height: 220px;
+    object-fit: contain;
+    transition: 0.3s;
+    display: block;
+    margin: 0 auto;
+    /* Images remain colored */
+}
+
+.card-image a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.card:hover .card-image img {
+    transform: scale(1.05);
+}
+
+.card-content {
+    text-align: left;
+}
+
+.card-content h3 {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.star-rating {
+    margin-bottom: 12px !important;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.price {
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+    color: var(--accent-color);
+    font-weight: 700;
+    display: block;
+    margin-bottom: 15px;
+    letter-spacing: -0.5px;
+}
+
+.card-metrics {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.metric-badge {
+    background: #f0f0f0;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    padding: 6px 8px;
+    border: 1px solid #ddd;
+    color: var(--text-color);
+    border-radius: 4px;
+    /* Slight fix for sharpness */
+    border-radius: 0;
+    /* Keep it sharp */
+}
+
+.specs {
+    margin-bottom: 20px;
+    padding-top: 15px;
+    border-top: 2px solid var(--text-color);
+    /* Strong separator */
+}
+
+.specs li {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    /* Label takes space, value aligns right */
+    gap: 10px;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px dotted #ccc;
+    color: var(--text-color);
+}
+
+.specs li span:first-child {
+    font-weight: 500;
+    color: var(--text-dim);
+    text-transform: uppercase;
+}
+
+.specs li span:last-child {
+    font-weight: 600;
+    text-align: right;
+}
+
+.card-footer {
+    margin-top: auto;
+}
+
+.card-actions {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 12px;
+}
+
+/* --- Footer --- */
+footer {
+    border-top: 1px solid var(--border-color);
+    padding: 80px 0;
+    background: #fafafa;
+}
+
+.footer-matrix {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 50px;
+}
+
+.active-scanline {
+    display: none;
+    /* Removing the old scanline */
+}
+
+/* Responsiveness */
+@media (max-width: 1024px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .hero h1 {
+        font-size: 3.5rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .nav-links {
+        display: none;
+    }
+
+    /* Simplified for now */
+    body::after {
+        border-width: 2px;
+    }
+
+    /* Thinner border on mobile */
+}
+
+/* Botronics Specific Accents */
+.glitch-text {
+    position: relative;
+    display: inline-block;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-color);
+}
+
+.glitch-text::before {
+    left: 2px;
+    text-shadow: -1px 0 #888;
+    clip: rect(24px, 550px, 90px, 0);
+    animation: glitch-anim-2 3s infinite linear alternate-reverse;
+}
+
+.glitch-text::after {
+    left: -2px;
+    text-shadow: -1px 0 #333;
+    clip: rect(85px, 550px, 140px, 0);
+    animation: glitch-anim 2.5s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim {
+    0% {
+        clip: rect(10px, 9999px, 30px, 0);
+    }
+
+    100% {
+        clip: rect(80px, 9999px, 100px, 0);
+    }
+}
+
+@keyframes glitch-anim-2 {
+    0% {
+        clip: rect(60px, 9999px, 80px, 0);
+    }
+
+    100% {
+        clip: rect(10px, 9999px, 50px, 0);
+    }
+}
+
+/* --- Missing Interactive Elements --- */
+.segment-tag {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    padding: 4px 8px;
+    background: var(--text-color);
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+    z-index: 2;
+    border: 1px solid white;
+}
+
+.segment-tag.coming-soon {
+    background: #ff9800;
+    /* Distinct orange for coming soon */
+    color: #000;
+    border-color: #000;
+}
+
+.card:hover .segment-tag {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.star-rating {
+    /* JS handles structure, this ensures alignment override if needed */
+    margin-bottom: 10px !important;
+}
+
+.metric-badge.antutu,
+.metric-badge.camera,
+.metric-badge.gpu {
+    /* Normalize colors to theme */
+    background: #f5f5f5 !important;
+    color: var(--text-color) !important;
+    border: 1px solid #ccc !important;
+}
+
+/* Ensure footer links are visible */
+.footer-column a {
+    color: var(--text-dim);
+    margin-bottom: 10px;
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    text-decoration: none;
+}
+
+/* --- Comparison Table --- */
+.comparison-container {
+    padding: 80px 0;
+}
+
+.comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    margin-top: 40px;
+}
+
+.comparison-table th,
+.comparison-table td {
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+}
+
+.comparison-table th {
+    background: #fafafa;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.comparison-table .spec-label {
+    background: #f5f5f5;
+    text-align: left;
+    width: 200px;
+    font-weight: 700;
+    color: var(--text-dim);
+}
+
+.comp-img-wrapper {
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    background: #f9f9f9;
+}
+
+.comp-img {
+    max-width: 140px;
+    max-height: 160px;
+    object-fit: contain;
+    transition: 0.3s ease;
+}
+
+.comp-img:hover {
+    transform: scale(1.1);
+}
+
+.comp-name {
+    font-size: 1.2rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--text-color);
+    margin-bottom: 10px;
+}
+
+/* --- Search Bar Styles --- */
+.search-container {
+    margin: 40px auto;
+    background: #fff;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    position: relative;
+    max-width: 800px;
+}
+
+.search-container::before,
+.search-container::after {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border: 2px solid var(--text-color);
+}
+
+.search-container::before {
+    top: -1px;
+    left: -1px;
+    border-right: none;
+    border-bottom: none;
+}
+
+.search-container::after {
+    bottom: -1px;
+    right: -1px;
+    border-left: none;
+    border-top: none;
+}
+
+.search-wrapper {
+    position: relative;
+}
+
+#lineupSearch {
+    width: 100%;
+    padding: 15px 50px 15px 20px;
+    font-size: 1rem;
+    border: 1px solid var(--border-color);
+    outline: none;
+    transition: all 0.3s ease;
+    font-family: var(--font-mono);
+    background: var(--bg-color);
+    text-transform: uppercase;
+}
+
+#lineupSearch:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.search-icon {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-dim);
+    font-size: 1.2rem;
+    pointer-events: none;
+}
+
+.no-results-msg {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    border: 1px dashed var(--border-color);
+    color: var(--text-dim);
+    font-family: var(--font-mono);
+}
+
+.comparison-table tr:hover td {
+    background: rgba(0, 0, 0, 0.02);
+}
